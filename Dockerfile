@@ -62,7 +62,7 @@ RUN printf "${FONT_BOLD}${FONT_GREEN} \n\
     curl -sSL ${YARN_GPG_URL} -o ${YARN_INSTALL_GPG_PATH} && \
     gpg --verify ${YARN_INSTALL_GPG_PATH} ${YARN_INSTALL_PATH} && \
     mkdir -p ${YARN_INSTALLED_PATH} && \
-    tar -xvf ${YARN_INSTALL_PATH} -C ${INSTALL_PATH} && \
+    tar -xf ${YARN_INSTALL_PATH} -C ${INSTALL_PATH} && \
     mv ${YARN_INSTALL_DIR}/* ${YARN_INSTALLED_PATH} && \
     ln -s ${YARN_INSTALLED_PATH}/bin/yarn ${SYSTEM_BIN_PATH} && \
     ln -s ${YARN_INSTALLED_PATH}/bin/yarnpkg ${SYSTEM_BIN_PATH} && \
@@ -88,11 +88,11 @@ RUN printf "${FONT_BOLD}${FONT_GREEN} \n\
     curl -sSL ${NODE_URL} -o ${NODE_INSTALL_PATH} && \
     curl -sSL ${NODE_GPG_URL} -o ${NODE_INSTALL_GPG_PATH} && \
     gpg --verify ${NODE_INSTALL_GPG_PATH} && \
-    tar -xvf ${NODE_INSTALL_PATH} -C ${INSTALL_PATH} && \
+    tar -xf ${NODE_INSTALL_PATH} -C ${INSTALL_PATH} && \
     cd ${NODE_INSTALL_DIR} && \
     ./configure ${NODE_BUILD_FLAGS} && \
     make -j$(getconf _NPROCESSORS_ONLN) && \
-    make install && \
+    make install | grep 'installing' && \
     printf "${FONT_BOLD}${FONT_GREEN} \n\
     ___________________ \n\
     END:</install-node> \n\

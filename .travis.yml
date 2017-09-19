@@ -3,14 +3,14 @@ language: bash
 services:
   - docker
 stages:
-  - build
-  - publish_github
+  - dockerBuild
+  - publishToGithub
 jobs:
   include:
-    - stage: build
+    - stage: dockerBuild
       script:
         - docker build .
-    - stage: publish_github
+    - stage: publishToGithub
       script:
         - mkdir -p ~/.ssh
         - echo ${SSH_DEPLOY_KEY} > ~/.ssh/known_hosts
