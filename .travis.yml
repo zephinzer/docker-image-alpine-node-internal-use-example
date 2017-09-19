@@ -1,0 +1,21 @@
+sudo: required
+language: bash
+services:
+  - docker
+stages:
+  - build
+  - publish_github
+jobs:
+  include:
+    - stage: build
+      script:
+        - docker build .
+    - stage: publish_github
+      script:
+        - mkdir -p ~/.ssh
+        - echo ${SSH_DEPLOY_KEY} > ~/.ssh/known_hosts
+        - git checkout ${TRAVIS_BRANCH}
+        - git fetch origin ${TRAVIS_BRANCH}
+        - git reset --hard ${TRAVIS_COMMIT}
+        - ./scripts/versioning/iterate -i -q
+        - git push --tags
