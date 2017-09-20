@@ -15,6 +15,8 @@ jobs:
         - mkdir -p ~/.ssh
         - echo ${SSH_DEPLOY_KEY} > ~/.ssh/known_hosts
         - git checkout ${TRAVIS_BRANCH}
+        - git remote remove origin
+        - git remote add origin git@github.com:zephinzer/docker-image-alpine-node.git
         - git fetch origin ${TRAVIS_BRANCH}
         - git reset --hard ${TRAVIS_COMMIT}
         - ./scripts/versioning/iterate -i -q
