@@ -13,9 +13,9 @@ notifications:
     - dev@joeir.net
 script:
   - VERSION=$(./scripts/versioning/get-next -q)
-  - docker build -t next .
+  - docker build -t ${DOCKER_REPO}:next .
   - docker login -u $DHUSER -p $DHPASS
-  - docker tag next ${DOCKER_REPO}:${VERSION}
+  - docker tag ${DOCKER_REPO}:next ${DOCKER_REPO}:${VERSION}
   - docker tag ${DOCKER_REPO}:${VERSION} ${DOCKER_REPO}:latest
   - docker push ${DOCKER_REPO}:${VERSION}
   - docker logout
