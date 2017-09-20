@@ -9,16 +9,19 @@ env:
   global:
     - DOCKER_REPO='zephinzer/alpine-node'
 script:
-  - docker build -t next .
-after_success:
   - VERSION=$(./scripts/versioning/get-next -q)
+  - docker build -t next .
   - docker login -u $DHUSER -p $DHPASS
   - docker tag next ${}
   - docker tag ${DOCKER_REPO}:${VERSION} ${DOCKER_REPO}:latest
   - docker push ${DOCKER_REPO}:${VERSION}
   - docker logout
-  - git checkout release
-  - git rebase ${TRAVIS_BRANCH}
+after_success:
+  - git checkout ${TRAVIS_BRANCH}
   - git reset --hard ${TRAVIS_COMMIT}
   - ./scripts/versioning/iterate -i -q
   - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags
+  - git fetch origin release
+  - git checkout release
+  - git rebase ${TRAVIS_BRANCH}
+  - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
