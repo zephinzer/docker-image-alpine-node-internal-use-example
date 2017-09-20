@@ -77,7 +77,7 @@ RUN printf "${FONT_BOLD}${FONT_GREEN} \n\
     ^^^^^^^^^^^^^^^^^^^^ \n\
     # gpg keys retrieval from url <https://github.com/nodejs/node/#release-team> \n
     ${FONT_RESET}${FONT_DIM}\n" && \
-    gpg --keyserver pool.sks-keyservers.net --recv-keys \
+    gpg --keyserver ipv4.pool.sks-keyservers.net --recv-keys \
       94AE36675C464D64BAFA68DD7434390BDBE9B9C5 \
       FD3A5288F042B6850C66B31F09FE44734EB7990E \
       71DCFD284A79C3B38668286BC97EC7A07EDE3FC1 \
@@ -87,6 +87,7 @@ RUN printf "${FONT_BOLD}${FONT_GREEN} \n\
       56730D5401028683275BD23C23EFEFE93C4CFFFE && \
     curl -sSL ${NODE_URL} -o ${NODE_INSTALL_PATH} && \
     curl -sSL ${NODE_GPG_URL} -o ${NODE_INSTALL_GPG_PATH} && \
+    grep ${NODE_INSTALL_PATH} ${NODE_INSTALL_GPG_PATH} | sha256sum -c - && \
     gpg --verify ${NODE_INSTALL_GPG_PATH} && \
     tar -xf ${NODE_INSTALL_PATH} -C ${INSTALL_PATH} && \
     cd ${NODE_INSTALL_DIR} && \

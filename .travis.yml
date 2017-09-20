@@ -8,6 +8,9 @@ branches:
 env:
   global:
     - DOCKER_REPO='zephinzer/alpine-node'
+notifications:
+  email:
+    - dev@joeir.net
 script:
   - VERSION=$(./scripts/versioning/get-next -q)
   - docker build -t next .
