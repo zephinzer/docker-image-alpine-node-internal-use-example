@@ -19,5 +19,5 @@ jobs:
         - git remote add origin git@github.com:zephinzer/docker-image-alpine-node.git
         - git fetch origin ${TRAVIS_BRANCH}
         - git reset --hard ${TRAVIS_COMMIT}
-        - ./scripts/versioning/iterate -i -q
+        - bash ./scripts/versioning/iterate -i -q
         - git push --tags
