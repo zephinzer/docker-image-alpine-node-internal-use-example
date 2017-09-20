@@ -9,12 +9,12 @@ before_install:
   - mkdir -p ~/.ssh
   - echo ${SSH_DEPLOY_KEY} > ~/.ssh/id_rsa_github_docker_image_alpine_node_deploy
   - chmod 600 ~/.ssh/id_rsa_github_docker_image_alpine_node_deploy
-  - ssh-keyscan -H 'github.com' >> ~/.ssh/known_hosts
+  - ssh-keyscan -H 'github.com,192.30.253.112' >> ~/.ssh/known_hosts
 jobs:
   include:
-    - stage: dockerBuild
-      script:
-        - docker build .
+    # - stage: dockerBuild
+    #   script:
+    #     - docker build .
     - stage: publishToGithub
       script:
         - git checkout ${TRAVIS_BRANCH}
