@@ -5,11 +5,11 @@ services:
 stages:
   - dockerBuild
   - publishToGithub
-before_install:
-  - mkdir -p ~/.ssh
-  - echo ${SSH_DEPLOY_KEY} > ~/.ssh/id_rsa_github_docker_image_alpine_node_deploy
-  - chmod 600 ~/.ssh/id_rsa_github_docker_image_alpine_node_deploy
-  - ssh-keyscan -H 'github.com,192.30.253.112' >> ~/.ssh/known_hosts
+# before_install:
+#   - mkdir -p ~/.ssh
+#   - echo ${SSH_DEPLOY_KEY} > ~/.ssh/id_rsa_github_docker_image_alpine_node_deploy
+#   - chmod 600 ~/.ssh/id_rsa_github_docker_image_alpine_node_deploy
+#   - ssh-keyscan -H '192.30.253.112' >> ~/.ssh/known_hosts
 jobs:
   include:
     # - stage: dockerBuild
@@ -21,5 +21,6 @@ jobs:
         - git remote remove origin
         - git remote add origin git@github.com:zephinzer/docker-image-alpine-node.git
         - git reset --hard ${TRAVIS_COMMIT}
+        - ls -lA ./scripts/versioning
         - bash ./scripts/versioning/iterate -i -q
-        - git push --tags
+        - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags
