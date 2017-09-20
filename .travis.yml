@@ -5,6 +5,11 @@ services:
 stages:
   - dockerBuild
   - publishToGithub
+before_install:
+  - mkdir -p ~/.ssh
+  - echo ${SSH_DEPLOY_KEY} > ~/.ssh/id_rsa_github_docker_image_alpine_node_deploy
+  - chmod 600 ~/.ssh/id_rsa_github_docker_image_alpine_node_deploy
+  - ssh-keyscan -H 'github.com' >> ~/.ssh/known_hosts
 jobs:
   include:
     - stage: dockerBuild
@@ -12,8 +17,6 @@ jobs:
         - docker build .
     - stage: publishToGithub
       script:
-        - mkdir -p ~/.ssh
-        - echo ${SSH_DEPLOY_KEY} > ~/.ssh/known_hosts
         - git checkout ${TRAVIS_BRANCH}
         - git remote remove origin
         - git remote add origin git@github.com:zephinzer/docker-image-alpine-node.git
