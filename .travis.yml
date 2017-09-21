@@ -29,40 +29,52 @@ after_script:
 jobs:
   include: # <codename>-<node_version>, <build_version>-<codename>, latest-<codename>
     - stage: build
+      env:
+        - RUNNING=${TAG_ARGON}
       script:
         - ./scripts/build/setup
         - NODE_VERSION=$(cat ./${TAG_ARGON}.Version);
         - docker build -t ${NEXT_ARGON} -f argon.Dockerfile .
         - docker tag ${NEXT_ARGON} ${DOCKER_REPO}:${TAG_ARGON}-${NODE_VERSION}
+        - docker push ${DOCKER_REPO}:${TAG_ARGON}-${NODE_VERSION}
         - docker tag ${NEXT_ARGON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_ARGON}
+        - docker push ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_ARGON}
         - docker tag ${NEXT_ARGON} ${DOCKER_REPO}:latest-${TAG_ARGON}
+        - docker push ${DOCKER_REPO}:latest-${TAG_ARGON}
         - ./scripts/build/teardown
-    - stage: build
-      script:
-        - ./scripts/build/setup
-        - NODE_VERSION=$(cat ./${TAG_BORON}.Version);
-        - docker build -t ${NEXT_BORON} -f boron.Dockerfile .
-        - docker tag ${NEXT_BORON} ${DOCKER_REPO}:${TAG_BORON}-${NODE_VERSION}
-        - docker tag ${NEXT_BORON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_BORON}
-        - docker tag ${NEXT_BORON} ${DOCKER_REPO}:latest-${TAG_BORON}
-        - ./scripts/build/teardown
-    - stage: build
-      script:
-        - ./scripts/build/setup
-        - NODE_VERSION=$(cat ./${TAG_CARBON}.Version);
-        - docker build -t ${NEXT_CARBON} -f carbon.Dockerfile .
-        - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${TAG_CARBON}-${NODE_VERSION}
-        - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_CARBON}
-        - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:latest-${TAG_CARBON}
-        - ./scripts/build/teardown
+    # - stage: build
+    #   env:
+    #     - RUNNING=${TAG_BORON}
+    #   script:
+    #     - ./scripts/build/setup
+    #     - NODE_VERSION=$(cat ./${TAG_BORON}.Version);
+    #     - docker build -t ${NEXT_BORON} -f boron.Dockerfile .
+    #     - docker tag ${NEXT_BORON} ${DOCKER_REPO}:${TAG_BORON}-${NODE_VERSION}
+    #     - docker push ${DOCKER_REPO}:${TAG_BORON}-${NODE_VERSION}
+    #     - docker tag ${NEXT_BORON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_BORON}
+    #     - docker push ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_BORON}
+    #     - docker tag ${NEXT_BORON} ${DOCKER_REPO}:latest-${TAG_BORON}
+    #     - docker push ${DOCKER_REPO}:latest-${TAG_BORON}
+    #     - ./scripts/build/teardown
+    # - stage: build
+    #   env:
+    #     - RUNNING=${TAG_CARBON}
+    #   script:
+    #     - ./scripts/build/setup
+    #     - NODE_VERSION=$(cat ./${TAG_CARBON}.Version);
+    #     - docker build -t ${NEXT_CARBON} -f carbon.Dockerfile .
+    #     - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${TAG_CARBON}-${NODE_VERSION}
+    #     - docker push ${DOCKER_REPO}:${TAG_CARBON}-${NODE_VERSION}
+    #     - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_CARBON}
+    #     - docker push ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_CARBON}
+    #     - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:latest-${TAG_CARBON}
+    #     - docker push ${DOCKER_REPO}:latest-${TAG_CARBON}
+    #     - ./scripts/build/teardown
     - stage: test
       script:
-        - docker image ls -a
-    - stage: publish
-      script:
-        - docker push ${DOCKER_REPO}:${BUILD_VERSION}${TAG_CARBON}
-        - docker push ${DOCKER_REPO}:${BUILD_VERSION}${TAG_BORON}
-        - docker push ${DOCKER_REPO}:${BUILD_VERSION}${TAG_ARGON}
+        - docker pull ${DOCKER_REPO}:latest-${TAG_ARGON}
+        - docker build -f ./test/react/Dockerfile -t test_argon .
+        - docker run test_argon
     - stage: publish
       script:
         - git checkout ${TRAVIS_BRANCH}
