@@ -7,15 +7,13 @@ For tags, check out the Docker Hub page: https://hub.docker.com/r/zephinzer/alpi
 
 ## What's Supported
 
-By supported, it means tested/automated!
-
 ### Node
 This Docker image supports only the LTS versions and the `latest` version. This means only `argon`, `boron` and `carbon` are supported as of now.
 
 ### Yarn
 This Docker image installs the latest Yarn version at build time.
 
-### Project Types
+### Application Layer Frameworks/Libraries
 This image also runs tests on the Docker image to make sure that dependencies can be successfully installed. The following are project types with tests you can find in the `./test` folder.
 
 #### React
@@ -28,56 +26,53 @@ Tests are found in `./test/react` and covers:
 ## Usage
 Pull the image from DockerHub specifying the approrpriate version:
 
-### Argon (v4.x)
-For the latest use:
+### In General
+For a specific Node version, use:
+
+```dockerfile
+FROM zephinzer/alpine-node:vx.y.z
+...
+```
+
+For a specific Node and Yarn version, use:
+
+```dockerfile
+FROM zephinzer/alpine-node:node-vX.Y.Z_yarn-vA.B.C
+...
+```
+
+Where `X.Y.Z` is the semver version of Node and `A.B.C` is the semver version of Yarn. Check the [Tags in Docker Hub Registry](https://hub.docker.com/r/zephinzer/alpine-node/tags/) to see what versions are available.
+
+Or just grab the latest build with:
+
+```dockerfile
+FROM zephinzer/alpine-node:latest
+...
+```
+
+### For Argon (v4.x)
+For the latest version of `argon`, use:
 
 ```dockerfile
 FROM zephinzer/alpine-node:latest-argon
 ...
 ```
 
-For other versions, use:
-
-```dockerfile
-FROM zephinzer/alpine-node:argon-x.y.z
-...
-```
-
-Where `x.y.z` equals to a [tagged version in Docker Hub](https://hub.docker.com/r/zephinzer/alpine-node/tags/)
-
 ### Boron (v6.x)
-For the latest use:
+For the latest version of `boron`, use:
 
 ```dockerfile
 FROM zephinzer/alpine-node:latest-boron
 ...
 ```
 
-For other versions, use:
-
-```dockerfile
-FROM zephinzer/alpine-node:boron-x.y.z
-...
-```
-
-Where `x.y.z` equals to a [tagged version in Docker Hub](https://hub.docker.com/r/zephinzer/alpine-node/tags/)
-
 ### Carbon (v8.x)
-For the latest use:
+For the latest version of `carbon`, use:
 
 ```dockerfile
 FROM zephinzer/alpine-node:latest-carbon
 ...
 ```
-
-For other versions, use:
-
-```dockerfile
-FROM zephinzer/alpine-node:carbon-x.y.z
-...
-```
-
-Where `x.y.z` equals to a [tagged version in Docker Hub](https://hub.docker.com/r/zephinzer/alpine-node/tags/)
 
 ## Kudos
 This repository was inspired by https://github.com/mhart/alpine-node.
