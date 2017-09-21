@@ -1,7 +1,7 @@
 #!/bin/bash
 TAG_NAME=$1;
 NODE_VERSION=$(cat ./${TAG_NAME}.Version);
-YARN_VERSION="yarn-$(cat ./yarn.Version)";
+YARN_VERSION="$(cat ./yarn.Version)";
 if [[ $? != "0" ]]; then
   printf "[ERROR] ./yarn.Version could not be found.\n";
   exit 1;
