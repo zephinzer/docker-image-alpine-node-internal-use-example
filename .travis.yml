@@ -20,6 +20,7 @@ notifications:
     - dev@joeir.net
 stages:
   - build
+  - test
   - publish
 before_script:
   - docker login -u $DHUSER -p $DHPASS
@@ -54,6 +55,9 @@ jobs:
         - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_CARBON}
         - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:latest-${TAG_CARBON}
         - ./scripts/build/teardown
+    - stage: test
+      script:
+        - docker image ls -a
     - stage: publish
       script:
         - docker push ${DOCKER_REPO}:${BUILD_VERSION}${TAG_CARBON}
