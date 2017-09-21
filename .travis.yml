@@ -79,13 +79,23 @@ jobs:
         - docker pull ${DOCKER_REPO}:latest-${TAG_ARGON}
         - docker build -f ./test/react/Dockerfile -t test_argon .
         - docker run test_argon
+    - stage: test
+      script:
+        - docker pull ${DOCKER_REPO}:latest-${TAG_BORON}
+        - docker build -f ./test/react/Dockerfile -t test_boron .
+        - docker run test_boron
+    - stage: test
+      script:
+        - docker pull ${DOCKER_REPO}:latest-${TAG_CARBON}
+        - docker build -f ./test/react/Dockerfile -t test_carbon .
+        - docker run test_carbon
     - stage: publish
       script:
         - git checkout ${TRAVIS_BRANCH}
         - git reset --hard ${TRAVIS_COMMIT}
         - ./scripts/versioning/iterate -i -q
         - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags
-        - git fetch origin release
+        - git fetch origin
         - git checkout origin/release
         - git rebase ${TRAVIS_BRANCH}
         - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
