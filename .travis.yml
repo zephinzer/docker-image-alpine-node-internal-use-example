@@ -44,36 +44,36 @@ jobs:
         - docker tag ${NEXT_ARGON} ${DOCKER_REPO}:latest-${TAG_ARGON}
         - docker push ${DOCKER_REPO}:latest-${TAG_ARGON}
         - ./scripts/build/teardown
-    # - stage: build
-    #   env:
-    #     - building=boron
-    #   script:
-    #     - ./scripts/build/setup
-    #     - NODE_VERSION=$(cat ./${TAG_BORON}.Version);
-    #     - docker build -t ${NEXT_BORON} -f boron.Dockerfile .
-    #     - docker tag ${NEXT_BORON} ${DOCKER_REPO}:${TAG_BORON}-${NODE_VERSION}
-    #     - docker push ${DOCKER_REPO}:${TAG_BORON}-${NODE_VERSION}
-    #     - docker tag ${NEXT_BORON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_BORON}
-    #     - docker push ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_BORON}
-    #     - docker tag ${NEXT_BORON} ${DOCKER_REPO}:latest-${TAG_BORON}
-    #     - docker push ${DOCKER_REPO}:latest-${TAG_BORON}
-    #     - ./scripts/build/teardown
-    # - stage: build
-    #   env:
-    #     - building=carbon
-    #   script:
-    #     - ./scripts/build/setup
-    #     - NODE_VERSION=$(cat ./${TAG_CARBON}.Version);
-    #     - docker build -t ${NEXT_CARBON} -f carbon.Dockerfile .
-    #     - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${TAG_CARBON}-${NODE_VERSION}
-    #     - docker push ${DOCKER_REPO}:${TAG_CARBON}-${NODE_VERSION}
-    #     - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_CARBON}
-    #     - docker push ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_CARBON}
-    #     - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:latest-${TAG_CARBON}
-    #     - docker push ${DOCKER_REPO}:latest-${TAG_CARBON}
-    #     - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:latest
-    #     - docker push ${DOCKER_REPO}:latest
-    #     - ./scripts/build/teardown
+    - stage: build
+      env:
+        - building=boron
+      script:
+        - ./scripts/build/setup
+        - NODE_VERSION=$(cat ./${TAG_BORON}.Version);
+        - docker build -t ${NEXT_BORON} -f boron.Dockerfile .
+        - docker tag ${NEXT_BORON} ${DOCKER_REPO}:${TAG_BORON}-${NODE_VERSION}
+        - docker push ${DOCKER_REPO}:${TAG_BORON}-${NODE_VERSION}
+        - docker tag ${NEXT_BORON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_BORON}
+        - docker push ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_BORON}
+        - docker tag ${NEXT_BORON} ${DOCKER_REPO}:latest-${TAG_BORON}
+        - docker push ${DOCKER_REPO}:latest-${TAG_BORON}
+        - ./scripts/build/teardown
+    - stage: build
+      env:
+        - building=carbon
+      script:
+        - ./scripts/build/setup
+        - NODE_VERSION=$(cat ./${TAG_CARBON}.Version);
+        - docker build -t ${NEXT_CARBON} -f carbon.Dockerfile .
+        - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${TAG_CARBON}-${NODE_VERSION}
+        - docker push ${DOCKER_REPO}:${TAG_CARBON}-${NODE_VERSION}
+        - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_CARBON}
+        - docker push ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_CARBON}
+        - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:latest-${TAG_CARBON}
+        - docker push ${DOCKER_REPO}:latest-${TAG_CARBON}
+        - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:latest
+        - docker push ${DOCKER_REPO}:latest
+        - ./scripts/build/teardown
     - stage: test
       script:
         - docker pull ${DOCKER_REPO}:latest-${TAG_ARGON}
@@ -86,6 +86,6 @@ jobs:
         - ./scripts/versioning/iterate -i -q
         - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags
         - git fetch origin release
-        - git checkout release
+        - git checkout origin/release
         - git rebase ${TRAVIS_BRANCH}
         - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
