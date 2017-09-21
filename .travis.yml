@@ -17,7 +17,7 @@ env:
     - TAG_CARBON='carbon'
 notifications:
   email:
-    - dev@joeir.net
+    - ${NOTIFICATION_EMAIL}
 stages:
   - build
   - test
@@ -30,7 +30,7 @@ jobs:
   include: # <codename>-<node_version>, <build_version>-<codename>, latest-<codename>
     - stage: build
       env:
-        - RUNNING=${TAG_ARGON}
+        - building=argon
       script:
         - ./scripts/build/setup
         - NODE_VERSION=$(cat ./${TAG_ARGON}.Version);
@@ -44,7 +44,7 @@ jobs:
         - ./scripts/build/teardown
     # - stage: build
     #   env:
-    #     - RUNNING=${TAG_BORON}
+    #     - building=boron
     #   script:
     #     - ./scripts/build/setup
     #     - NODE_VERSION=$(cat ./${TAG_BORON}.Version);
@@ -58,7 +58,7 @@ jobs:
     #     - ./scripts/build/teardown
     # - stage: build
     #   env:
-    #     - RUNNING=${TAG_CARBON}
+    #     - building=carbon
     #   script:
     #     - ./scripts/build/setup
     #     - NODE_VERSION=$(cat ./${TAG_CARBON}.Version);
