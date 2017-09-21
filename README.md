@@ -10,17 +10,20 @@ For tags, check out the Docker Hub page: https://hub.docker.com/r/zephinzer/alpi
 By supported, it means tested/automated!
 
 ### Node
-This Docker image supports only the LTS versions and the `latest` version.
+This Docker image supports only the LTS versions and the `latest` version. This means only `argon`, `boron` and `carbon` are supported as of now.
 
 ### Yarn
 This Docker image installs the latest Yarn version at build time.
 
 ### Project Types
+This image also runs tests on the Docker image to make sure that dependencies can be successfully installed. The following are project types with tests you can find in the `./test` folder.
 
 #### React
-Tests found in `./test/react` and covers:
+Tests are found in `./test/react` and covers:
 
 - latest-argon
+- latest-boron
+- latest-carbon
 
 ## Usage
 Pull the image from DockerHub specifying the approrpriate version:
