@@ -77,17 +77,17 @@ jobs:
     - stage: test
       script:
         - docker pull ${DOCKER_REPO}:latest-${TAG_ARGON}
-        - docker build -f ./test/react/Dockerfile -t test_argon .
+        - docker build -f ./test/react/argon.Dockerfile -t test_argon .
         - docker run test_argon
     - stage: test
       script:
         - docker pull ${DOCKER_REPO}:latest-${TAG_BORON}
-        - docker build -f ./test/react/Dockerfile -t test_boron .
+        - docker build -f ./test/react/boron.Dockerfile -t test_boron .
         - docker run test_boron
     - stage: test
       script:
         - docker pull ${DOCKER_REPO}:latest-${TAG_CARBON}
-        - docker build -f ./test/react/Dockerfile -t test_carbon .
+        - docker build -f ./test/react/carbon.Dockerfile -t test_carbon .
         - docker run test_carbon
     - stage: publish
       script:

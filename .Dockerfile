@@ -26,7 +26,7 @@ ENV PATHS_TO_REMOVE="\
   /usr/share/man \
   /var/cache/apk"
 ENV SYSTEM_BIN_PATH=/usr/local/bin/
-ENV YARN_VERSION=v1.0.2
+ENV YARN_VERSION=__YARN_VERSION__
 ENV YARN_URL=https://github.com/yarnpkg/yarn/releases/download/${YARN_VERSION}/yarn-${YARN_VERSION}.tar.gz
 ENV YARN_GPG_URL=https://github.com/yarnpkg/yarn/releases/download/${YARN_VERSION}/yarn-${YARN_VERSION}.tar.gz.asc
 ENV YARN_GPG_KEY_URL=https://dl.yarnpkg.com/debian/pubkey.gpg

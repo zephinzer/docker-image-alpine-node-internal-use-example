@@ -4,25 +4,36 @@ NEXT=$(./scripts/versioning/get-next -q); printf "$NEXT" > _.Version
 # get latest LTS versions
 # argon
 LATEST_ARGON=v$(curl https://nodejs.org/download/release/latest-v4.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
-printf "$LATEST_ARGON" > argon.Version
+printf "$LATEST_ARGON" > argon.Version;
 # boron
 LATEST_BORON=v$(curl https://nodejs.org/download/release/latest-v6.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
-printf "$LATEST_BORON" > boron.Version
+printf "$LATEST_BORON" > boron.Version;
 # carbon
 LATEST_CARBON=v$(curl https://nodejs.org/download/release/latest-v8.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
-printf "$LATEST_CARBON" > carbon.Version
+printf "$LATEST_CARBON" > carbon.Version;
 
 #### add more here in similar fashion as the years pass ####
 
+# get latest yarn version
+LATEST_YARN=$(curl https://yarnpkg.com/latest.tar.gz | cut -f 8 -d "/");
+
 # prepare for build
-NODE_VERSION_KEY=__NODE_VERSION__
+NODE_VERSION_KEY=__NODE_VERSION__;
+YARN_VERSION_KEY=__YARN_VERSION__;
+SED_REPLACE_YARN="s/${YARN_VERSION_KEY}/${LATEST_YARN}/g";
 # prepare argon
-sed -e "s/${NODE_VERSION_KEY}/${LATEST_ARGON}/g" .Dockerfile > argon.Dockerfile
-sed -i -e "s/--without-intl/ /g" argon.Dockerfile
+sed -e "s/${NODE_VERSION_KEY}/${LATEST_ARGON}/g" \
+    -e "${SED_REPLACE_YARN}" \
+    -e "s/--without-intl/ /g" \
+    .Dockerfile > argon.Dockerfile;
 # prepare boron
-sed -e "s/${NODE_VERSION_KEY}/${LATEST_BORON}/g" .Dockerfile > boron.Dockerfile
+sed -e "s/${NODE_VERSION_KEY}/${LATEST_BORON}/g" \
+    -e "${SED_REPLACE_YARN}" \
+    .Dockerfile > boron.Dockerfile
 # prepare carbon
-sed -e "s/${NODE_VERSION_KEY}/${LATEST_CARBON}/g" .Dockerfile > carbon.Dockerfile
+sed -e "s/${NODE_VERSION_KEY}/${LATEST_CARBON}/g" \
+    -e "${SED_REPLACE_YARN}" \
+    .Dockerfile > carbon.Dockerfile
 
 #### add more here in similar fashion as the years pass ####
 
