@@ -30,22 +30,22 @@ jobs:
     - stage: build
       script:
         - ./scripts/build/setup
-        - docker build -t ${DOCKER_REPO}:${NEXT_ARGON} -f argon.Dockerfile
-        - docker tag ${DOCKER_REPO}:${NEXT_ARGON} ${DOCKER_REPO}:${BUILD_VERSION}${TAG_ARGON}
+        - docker build -t ${NEXT_ARGON} -f argon.Dockerfile
+        - docker tag ${NEXT_ARGON} ${DOCKER_REPO}:${BUILD_VERSION}${TAG_ARGON}
         - docker tag ${DOCKER_REPO}:${BUILD_VERSION}${TAG_ARGON} ${DOCKER_REPO}:latest${TAG_ARGON}
         - ./scripts/build/teardown
     - stage: build
       script:
         - ./scripts/build/setup
-        - docker build -t ${DOCKER_REPO}:${NEXT_BORON} -f boron.Dockerfile
-        - docker tag ${DOCKER_REPO}:${NEXT_BORON} ${DOCKER_REPO}:${BUILD_VERSION}${TAG_BORON}
+        - docker build -t ${NEXT_BORON} -f boron.Dockerfile
+        - docker tag ${NEXT_BORON} ${DOCKER_REPO}:${BUILD_VERSION}${TAG_BORON}
         - docker tag ${DOCKER_REPO}:${BUILD_VERSION}${TAG_BORON} ${DOCKER_REPO}:latest${TAG_BORON}
         - ./scripts/build/teardown
     - stage: build
       script:
         - ./scripts/build/setup
-        - docker build -t ${DOCKER_REPO}:${NEXT_CARBON} -f carbon.Dockerfile
-        - docker tag ${DOCKER_REPO}:${NEXT_CARBON} ${DOCKER_REPO}:${BUILD_VERSION}${TAG_CARBON}
+        - docker build -t ${NEXT_CARBON} -f carbon.Dockerfile
+        - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:${BUILD_VERSION}${TAG_CARBON}
         - docker tag ${DOCKER_REPO}:${BUILD_VERSION}${TAG_CARBON} ${DOCKER_REPO}:latest${TAG_CARBON}
         - ./scripts/build/teardown
     - stage: publish
