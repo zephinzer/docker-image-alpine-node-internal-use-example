@@ -83,7 +83,8 @@ jobs:
       after_success:
         - git checkout ${TRAVIS_BRANCH}
         - git pull
-        - git fetch
+        - git fetch origin
+        - git branch
         - git checkout release
         - git rebase ${TRAVIS_BRANCH}
-        - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
+        - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin release
