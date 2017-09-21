@@ -60,7 +60,7 @@ RUN printf "${FONT_BOLD}${FONT_GREEN} \n\
     curl -sS ${YARN_GPG_KEY_URL} | gpg --import && \
     curl -sSL ${YARN_URL} -o ${YARN_INSTALL_PATH} && \
     curl -sSL ${YARN_GPG_URL} -o ${YARN_INSTALL_GPG_PATH} && \
-    gpg --verify ${YARN_INSTALL_GPG_PATH} && \
+    gpg --verify ${YARN_INSTALL_GPG_PATH} ${YARN_INSTALL_PATH} && \
     mkdir -p ${YARN_INSTALLED_PATH} && \
     tar -xf ${YARN_INSTALL_PATH} -C ${INSTALL_PATH} && \
     mv ${YARN_INSTALL_DIR}/* ${YARN_INSTALLED_PATH} && \
@@ -87,7 +87,7 @@ RUN printf "${FONT_BOLD}${FONT_GREEN} \n\
       56730D5401028683275BD23C23EFEFE93C4CFFFE && \
     curl -sSL ${NODE_URL} -o ${NODE_INSTALL_PATH} && \
     curl -sSL ${NODE_GPG_URL} -o ${NODE_INSTALL_GPG_PATH} && \
-    #gpg --verify ${NODE_INSTALL_GPG_PATH} && \
+    grep ${NODE_INSTALL_PATH} ${NODE_INSTALL_GPG_PATH} | sha256sum -c - && \
     tar -xf ${NODE_INSTALL_PATH} -C ${INSTALL_PATH} && \
     cd ${NODE_INSTALL_DIR} && \
     ./configure ${NODE_BUILD_FLAGS} && \
