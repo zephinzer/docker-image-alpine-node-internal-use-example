@@ -1,7 +1,2 @@
 #!/bin/bash
-rm -rf
-  _.*
-  argon.*
-  boron.*
-  carbon.*
-;
+rm -rf ./_.* ./argon.* ./boron.* ./carbon.*;

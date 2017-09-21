@@ -1,5 +1,5 @@
 #!/bin/bash
-NEXT=$(./scripts/versioning/get-next -q) > _.Version
+NEXT=$(./scripts/versioning/get-next -q); printf "$NEXT" > _.Version
 LATEST_ARGON=4.8.4; printf "$LATEST_ARGON" > argon.Version
 LATEST_BORON=6.11.3; printf "$LATEST_BORON" > boron.Version
 LATEST_CARBON=8.5.0; printf "$LATEST_CARBON" > carbon.Version
