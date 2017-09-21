@@ -35,6 +35,8 @@ jobs:
         - ./scripts/build/setup
         - NODE_VERSION=$(cat ./${TAG_ARGON}.Version);
         - docker build -t ${NEXT_ARGON} -f argon.Dockerfile .
+        - docker tag ${NEXT_ARGON} ${DOCKER_REPO}:${NODE_VERSION}
+        - docker push ${DOCKER_REPO}:${NODE_VERSION}
         - docker tag ${NEXT_ARGON} ${DOCKER_REPO}:${TAG_ARGON}-${NODE_VERSION}
         - docker push ${DOCKER_REPO}:${TAG_ARGON}-${NODE_VERSION}
         - docker tag ${NEXT_ARGON} ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_ARGON}

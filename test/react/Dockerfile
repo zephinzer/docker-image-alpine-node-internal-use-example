@@ -1,3 +1,3 @@
-FROM zephinzer/alpine:latest-argon
+FROM zephinzer/alpine-node:latest-argon
 ENTRYPOINT ["yarn install"]
 COPY . /app
