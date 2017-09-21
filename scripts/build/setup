@@ -1,6 +1,11 @@
 #!/bin/bash
 # output versions
-NEXT=$(./scripts/versioning/get-next -q); printf "$NEXT" > _.Version
+NEXT=$(./scripts/versioning/get-next -q); printf "$NEXT" > build.Version
+
+# specify version of alpine (according to iron)
+LATEST_ALPINE="3.4"
+printf "$LATEST_ALPINE" > alpine.Version;
+
 # get latest LTS versions
 # argon
 LATEST_ARGON=v$(curl https://nodejs.org/download/release/latest-v4.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
@@ -19,21 +24,26 @@ LATEST_YARN=$(curl https://yarnpkg.com/latest.tar.gz | cut -f 8 -d "/");
 printf "$LATEST_YARN" > yarn.Version;
 
 # prepare for build
+ALPINE_VERSION_KEY=__ALPINE_VERSION__;
 NODE_VERSION_KEY=__NODE_VERSION__;
 YARN_VERSION_KEY=__YARN_VERSION__;
 SED_REPLACE_YARN="s/${YARN_VERSION_KEY}/${LATEST_YARN}/g";
+SED_REPLACE_ALPINE="s/${ALPINE_VERSION_KEY}/${LATEST_ALPINE}/g";
 
 # prepare argon
 sed -e "s/${NODE_VERSION_KEY}/${LATEST_ARGON}/g" \
+    -e "${SED_REPLACE_ALPINE}" \
     -e "${SED_REPLACE_YARN}" \
     -e "s/--without-intl/ /g" \
     .Dockerfile > argon.Dockerfile;
 # prepare boron
 sed -e "s/${NODE_VERSION_KEY}/${LATEST_BORON}/g" \
+    -e "${SED_REPLACE_ALPINE}" \
     -e "${SED_REPLACE_YARN}" \
     .Dockerfile > boron.Dockerfile
 # prepare carbon
 sed -e "s/${NODE_VERSION_KEY}/${LATEST_CARBON}/g" \
+    -e "${SED_REPLACE_ALPINE}" \
     -e "${SED_REPLACE_YARN}" \
     .Dockerfile > carbon.Dockerfile
 

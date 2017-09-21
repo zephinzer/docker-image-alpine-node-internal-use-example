@@ -1,2 +1,2 @@
 #!/bin/bash
-rm -rf ./_.* ./argon.* ./boron.* ./carbon.*;
+rm -rf ./*.Version ./argon.* ./boron.* ./carbon.*;
