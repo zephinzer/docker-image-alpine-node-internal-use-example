@@ -1,9 +1,15 @@
 #!/bin/bash
+# output versions
 NEXT=$(./scripts/versioning/get-next -q); printf "$NEXT" > _.Version
 LATEST_ARGON=4.8.4; printf "$LATEST_ARGON" > argon.Version
 LATEST_BORON=6.11.3; printf "$LATEST_BORON" > boron.Version
 LATEST_CARBON=8.5.0; printf "$LATEST_CARBON" > carbon.Version
+# prepare for build
 NODE_VERSION_KEY=__NODE_VERSION__
+# prepare argon
 sed -e "s/${NODE_VERSION_KEY}/${LATEST_ARGON}/g" .Dockerfile > argon.Dockerfile
+sed -i -e "s/--without-intl/ /g" argon.Dockerfile
+# prepare boron
 sed -e "s/${NODE_VERSION_KEY}/${LATEST_BORON}/g" .Dockerfile > boron.Dockerfile
+# prepare carbon
 sed -e "s/${NODE_VERSION_KEY}/${LATEST_CARBON}/g" .Dockerfile > carbon.Dockerfile
