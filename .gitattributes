@@ -1,0 +1,6 @@
+/scripts/ci export-ignore
+/scripts/versioning export-ignore
+/test export-ignore
+/.gitignore export-ignore
+/.gitmodules export-ignore
+/.travis.yml export-ignore

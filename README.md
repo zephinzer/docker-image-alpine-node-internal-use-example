@@ -24,9 +24,11 @@ Tests are found in `./test/react` and covers:
 - latest-carbon
 
 ## Usage
+
+### As Image
 Pull the image from DockerHub specifying the approrpriate version:
 
-### In General
+#### In General
 For a specific Node version, use:
 
 ```dockerfile
@@ -50,7 +52,7 @@ FROM zephinzer/alpine-node:latest
 ...
 ```
 
-### For Argon (v4.x)
+#### With Argon (v4.x)
 For the latest version of `argon`, use:
 
 ```dockerfile
@@ -58,7 +60,7 @@ FROM zephinzer/alpine-node:latest-argon
 ...
 ```
 
-### Boron (v6.x)
+#### With Boron (v6.x)
 For the latest version of `boron`, use:
 
 ```dockerfile
@@ -66,12 +68,27 @@ FROM zephinzer/alpine-node:latest-boron
 ...
 ```
 
-### Carbon (v8.x)
+#### With Carbon (v8.x)
 For the latest version of `carbon`, use:
 
 ```dockerfile
 FROM zephinzer/alpine-node:latest-carbon
 ...
+```
+
+### From Repository Release
+Every successful build/test run by Travis results in a release by tagging the commit with a semver version. You may choose to download the project from the releases page but should you do that, you will need to run the following command to generate the correct `Dockerfile` before you can build it. Run the following commands:
+
+```bash
+# ./scripts/use argon
+# ./scripts/use boron
+# ./scripts/use carbon
+```
+
+These will create `Dockerfile`s for `argon` (Node 4.x LTS), `boron` (Node 6.x LTS) and `carbon` (Node 8.x) respectively. You can then build it via:
+
+```bash
+# docker build .
 ```
 
 ## Kudos

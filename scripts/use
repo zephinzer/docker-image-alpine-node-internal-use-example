@@ -1,0 +1,9 @@
+#!/bin/bash
+NODE_CODENAME=$1;
+if [[ $NODE_CODENAME = "" ]]; then
+  exit 1;
+else
+  ./scripts/build/setup;
+  mv ./${NODE_CODENAME}.Dockerfile ./Dockerfile
+  ./scripts/build/teardown;
+fi;
