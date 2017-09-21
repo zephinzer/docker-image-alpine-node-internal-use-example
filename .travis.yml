@@ -7,24 +7,55 @@ branches:
     - master
 env:
   global:
+    - BUILD_VERSION=$(./scripts/versioning/get-next -q)
     - DOCKER_REPO='zephinzer/alpine-node'
+    - NEXT_ARGON='next_argon'
+    - NEXT_BORON='next_boron'
+    - NEXT_CARBON='next_carbon'
+    - TAG_ARGON='.argon'
+    - TAG_BORON='.boron'
+    - TAG_CARBON='.carbon'
 notifications:
   email:
     - dev@joeir.net
-script:
-  - VERSION=$(./scripts/versioning/get-next -q)
-  - docker build -t ${DOCKER_REPO}:next .
+stages:
+  - build
+  - publish
+before_script:
+  - ./scripts/build/setup
   - docker login -u $DHUSER -p $DHPASS
-  - docker tag ${DOCKER_REPO}:next ${DOCKER_REPO}:${VERSION}
-  - docker tag ${DOCKER_REPO}:${VERSION} ${DOCKER_REPO}:latest
-  - docker push ${DOCKER_REPO}:${VERSION}
+after_script:
   - docker logout
-after_success:
-  - git checkout ${TRAVIS_BRANCH}
-  - git reset --hard ${TRAVIS_COMMIT}
-  - ./scripts/versioning/iterate -i -q
-  - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags
-  - git fetch origin release
-  - git checkout release
-  - git rebase ${TRAVIS_BRANCH}
-  - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
+  - ./scripts/build/teardown
+jobs:
+  include:
+    - stage: build
+      script:
+        - docker build -t ${DOCKER_REPO}:${NEXT_ARGON} -f argon.Dockerfile
+        - docker tag ${DOCKER_REPO}:${NEXT_ARGON} ${DOCKER_REPO}:${BUILD_VERSION}${TAG_ARGON}
+        - docker tag ${DOCKER_REPO}:${BUILD_VERSION}${TAG_ARGON} ${DOCKER_REPO}:latest${TAG_ARGON}
+    - stage: build
+      script:
+        - docker build -t ${DOCKER_REPO}:${NEXT_BORON} -f boron.Dockerfile
+        - docker tag ${DOCKER_REPO}:${NEXT_BORON} ${DOCKER_REPO}:${BUILD_VERSION}${TAG_BORON}
+        - docker tag ${DOCKER_REPO}:${BUILD_VERSION}${TAG_BORON} ${DOCKER_REPO}:latest${TAG_BORON}
+    - stage: build
+      script:
+        - docker build -t ${DOCKER_REPO}:${NEXT_CARBON} -f carbon.Dockerfile
+        - docker tag ${DOCKER_REPO}:${NEXT_CARBON} ${DOCKER_REPO}:${BUILD_VERSION}${TAG_CARBON}
+        - docker tag ${DOCKER_REPO}:${BUILD_VERSION}${TAG_CARBON} ${DOCKER_REPO}:latest${TAG_CARBON}
+    - stage: publish
+      script:
+        - docker push ${DOCKER_REPO}:${BUILD_VERSION}${TAG_CARBON}
+        - docker push ${DOCKER_REPO}:${BUILD_VERSION}${TAG_BORON}
+        - docker push ${DOCKER_REPO}:${BUILD_VERSION}${TAG_ARGON}
+    - stage: publish
+      script:
+        - git checkout ${TRAVIS_BRANCH}
+        - git reset --hard ${TRAVIS_COMMIT}
+        - ./scripts/versioning/iterate -i -q
+        - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags
+        - git fetch origin release
+        - git checkout release
+        - git rebase ${TRAVIS_BRANCH}
+        - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git

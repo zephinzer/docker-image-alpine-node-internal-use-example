@@ -1,0 +1,9 @@
+#!/bin/bash
+NEXT=$(./scripts/versioning/get-next -q) > _.Version
+LATEST_ARGON=4.8.4; printf "$LATEST_ARGON" > argon.Version
+LATEST_BORON=6.11.3; printf "$LATEST_BORON" > boron.Version
+LATEST_CARBON=8.5.0; printf "$LATEST_CARBON" > carbon.Version
+NODE_MODULE_KEY=__NODE_MODULE__
+sed -e "s/${NODE_MODULE_KEY}/${LATEST_ARGON}g" .Dockerfile > argon.Dockerfile
+sed -e "s/${NODE_MODULE_KEY}/${LATEST_BORON}g" .Dockerfile > boron.Dockerfile
+sed -e "s/${NODE_MODULE_KEY}/${LATEST_CARBON}g" .Dockerfile > carbon.Dockerfile
