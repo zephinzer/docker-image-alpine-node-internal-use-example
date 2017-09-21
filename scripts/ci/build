@@ -1,13 +1,23 @@
 #!/bin/bash
 TAG_NAME=$1;
 NODE_VERSION=$(cat ./${TAG_NAME}.Version);
-if [[ $? != "0" ]]; then exit 1; fi;
-EXISTENCE_CHECK=$(curl --silent -f -lSL https://index.docker.io/v1/repositories/zephinzer/alpine-node/tags/${NODE_VERSION});
+YARN_VERSION="yarn-$(cat ./yarn.Version)";
 if [[ $? != "0" ]]; then
+  printf "[ERROR] ./yarn.Version could not be found.\n";
+  exit 1;
+fi;
+EXISTENCE_TAG="node-${NODE_VERSION}_yarn-${YARN_VERSION}";
+EXISTENCE_CHECK=$(curl --silent -f -lSL https://index.docker.io/v1/repositories/zephinzer/alpine-node/tags/${EXISTENCE_TAG});
+if [[ $? != "0" ]]; then
+  printf "[BUILDING] TAG:${EXISTENCE_TAG} was NOT found. Building...\n";
   docker build -t next -f ${TAG_NAME}.Dockerfile .;
   docker tag next  ${DOCKER_REPO}:${NODE_VERSION};
   docker push      ${DOCKER_REPO}:${NODE_VERSION};
+  docker tag next  ${DOCKER_REPO}:${EXISTENCE_TAG};
+  docker push      ${DOCKER_REPO}:${EXISTENCE_TAG};
   docker tag next  ${DOCKER_REPO}:latest-${TAG_NAME};
   docker push      ${DOCKER_REPO}:latest-${TAG_NAME};
+else
+  printf "[SKIPPED] TAG:${EXISTENCE_TAG} was found. Skipping build...\n";
 fi;
 ./scripts/build/teardown;

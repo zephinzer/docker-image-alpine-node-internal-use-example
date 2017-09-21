@@ -16,11 +16,13 @@ printf "$LATEST_CARBON" > carbon.Version;
 
 # get latest yarn version
 LATEST_YARN=$(curl https://yarnpkg.com/latest.tar.gz | cut -f 8 -d "/");
+printf "$LATEST_YARN" > yarn.Version;
 
 # prepare for build
 NODE_VERSION_KEY=__NODE_VERSION__;
 YARN_VERSION_KEY=__YARN_VERSION__;
 SED_REPLACE_YARN="s/${YARN_VERSION_KEY}/${LATEST_YARN}/g";
+
 # prepare argon
 sed -e "s/${NODE_VERSION_KEY}/${LATEST_ARGON}/g" \
     -e "${SED_REPLACE_YARN}" \
