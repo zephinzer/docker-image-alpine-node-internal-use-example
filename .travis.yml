@@ -18,7 +18,7 @@ env:
     - DH_TAGS_URL=https://index.docker.io/v1/repositories/zephinzer/alpine-node/tags/
 notifications:
   email:
-    - ${NOTIFICATION_EMAIL}
+    - dev@joeir.net
 stages:
   - build
   - test
