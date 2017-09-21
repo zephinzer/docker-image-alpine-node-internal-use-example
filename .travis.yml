@@ -69,6 +69,8 @@ jobs:
     #     - docker push ${DOCKER_REPO}:${BUILD_VERSION}-${TAG_CARBON}
     #     - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:latest-${TAG_CARBON}
     #     - docker push ${DOCKER_REPO}:latest-${TAG_CARBON}
+    #     - docker tag ${NEXT_CARBON} ${DOCKER_REPO}:latest
+    #     - docker push ${DOCKER_REPO}:latest
     #     - ./scripts/build/teardown
     - stage: test
       script:
