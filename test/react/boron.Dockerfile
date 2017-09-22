@@ -2,6 +2,6 @@ FROM zephinzer/alpine-node:latest-boron
 ENV EXTRA_DEPENDENCIES="python"
 RUN apk udate && \
     apk upgrade && \
-    add $EXTRA_DEPENDENCIES
+    apk add $EXTRA_DEPENDENCIES
 ENTRYPOINT ["yarn", "install"]
 COPY . /app
