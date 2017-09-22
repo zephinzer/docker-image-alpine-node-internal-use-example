@@ -82,6 +82,7 @@ jobs:
         - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags
       after_success:
         - git checkout ${TRAVIS_BRANCH}
+        - git remote -v
         - git pull
         - git fetch origin
         - git branch
