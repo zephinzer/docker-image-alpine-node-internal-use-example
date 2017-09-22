@@ -15,16 +15,16 @@ ENV NODE_INSTALL_DIR=${INSTALL_PATH}/node-${NODE_VERSION}
 ENV NODE_BUILD_FLAGS="--without-intl --fully-static"
 ENV PATHS_TO_REMOVE="\
   ${INSTALL_PATH}/* \
-  /root/.gnupg \
-  /root/.node-gyp \
-  /root/.npm \
-  /usr/include \
-  /usr/lib/node_modules/npm/man \
-  /usr/lib/node_modules/npm/doc \
-  /usr/lib/node_modules/npm/html \
-  /usr/lib/node_modules/npm/scripts \
-  /usr/share/man \
-  /var/cache/apk"
+  /root/.gnupg/* \
+  /root/.node-gyp/* \
+  /root/.npm/* \
+  /usr/include/* \
+  /usr/lib/node_modules/npm/man/* \
+  /usr/lib/node_modules/npm/doc/* \
+  /usr/lib/node_modules/npm/html/* \
+  /usr/lib/node_modules/npm/scripts/* \
+  /usr/share/man/* \
+  /var/cache/apk/*"
 ENV SYSTEM_BIN_PATH=/usr/local/bin/
 ENV YARN_VERSION=__YARN_VERSION__
 ENV YARN_URL=https://github.com/yarnpkg/yarn/releases/download/${YARN_VERSION}/yarn-${YARN_VERSION}.tar.gz
