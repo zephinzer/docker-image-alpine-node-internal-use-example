@@ -1,5 +1,5 @@
 FROM zephinzer/alpine-node:latest-carbon
-ENV EXTRA_DEPENDENCIES="python make"
+ENV EXTRA_DEPENDENCIES="python make g++"
 COPY . /app
 RUN mkdir -p /var/cache/apk && \
     apk update && \
