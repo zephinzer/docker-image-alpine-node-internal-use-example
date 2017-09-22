@@ -8,7 +8,7 @@ if [[ $? != "0" ]]; then
 fi;
 EXISTENCE_TAG="node-${NODE_VERSION}_yarn-${YARN_VERSION}";
 EXISTENCE_CHECK=$(curl --silent -f -lSL https://index.docker.io/v1/repositories/zephinzer/alpine-node/tags/${EXISTENCE_TAG});
-if [[ $? != "0" ]]; then
+if [[ $? != "0" ]] | [[ $TRAVIS_COMMIT_MESSAGE == *"[force build]"* ]]; then
   printf "[BUILDING] TAG:${EXISTENCE_TAG} was NOT found. Building...\n";
   docker build -t next -f ${TAG_NAME}.Dockerfile .;
   docker tag next  ${DOCKER_REPO}:${NODE_VERSION};
