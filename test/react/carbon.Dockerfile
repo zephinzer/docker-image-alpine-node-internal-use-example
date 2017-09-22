@@ -1,4 +1,4 @@
 FROM zephinzer/alpine-node:latest-carbon
-RUN apt add python
+RUN apk add python
 ENTRYPOINT ["yarn", "install"]
 COPY . /app
