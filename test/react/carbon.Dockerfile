@@ -7,3 +7,4 @@ RUN mkdir -p /var/cache/apk && \
     apk add --no-cache ${EXTRA_DEPENDENCIES} && \
     yarn install && \
     apk del ${EXTRA_DEPENDENCIES}
+ENTRYPOINT ["echo", "'All is well'"]
