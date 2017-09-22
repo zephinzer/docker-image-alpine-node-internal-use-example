@@ -1,5 +1,5 @@
 FROM zephinzer/alpine-node:latest-argon
-ENV EXTRA_DEPENDENCIES="python"
+ENV EXTRA_DEPENDENCIES="python make"
 COPY . /app
 RUN mkdir -p /var/cache/apk && \
     apk update && \
