@@ -1,3 +1,10 @@
 .git
-LICENSE
+.setup
+conf.d
+scripts
+test
+.gitattributes
+.gitignore
+.gitmodules
+.travis.yml
 README.md

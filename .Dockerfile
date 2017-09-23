@@ -1,4 +1,4 @@
-FROM iron/base:__ALPINE_VERSION__
+FROM __BASE_IMAGE_SOURCE__:__BASE_IMAGE_TAG__
 LABEL maintainer="dev@joeir.net" \
       version="1.0.0" \
       description="A minimal Node + Yarn base image to work with."

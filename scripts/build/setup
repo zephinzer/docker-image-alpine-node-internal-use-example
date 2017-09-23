@@ -1,51 +1,114 @@
 #!/bin/bash
+# current script directory
+CURR_DIR=$(dirname $0);
+# project root
+PROJ_DIR=${CURR_DIR}/../..;
+# configuration directory
+CONF_DIR=${PROJ_DIR}/conf.d;
+# create setup info directory
+SETUP_DIR=${PROJ_DIR}/.setup;
+mkdir -p ${SETUP_DIR};
 # output versions
-NEXT=$(./scripts/versioning/get-next -q); printf "$NEXT" > build.Version
+BUILD_VERSION=$(${CURR_DIR}/../versioning/get-next -q);
+printf "BUILD_VERSION:          $BUILD_VERSION\n";
+printf "$BUILD_VERSION" > ${SETUP_DIR}/build.Version;
 
-# specify version of alpine (according to iron)
-LATEST_ALPINE="3.4"
-printf "$LATEST_ALPINE" > alpine.Version;
+# set base image versions [[MAINTENANCE]]
 
-# get latest LTS versions
-# argon
-LATEST_ARGON=v$(curl https://nodejs.org/download/release/latest-v4.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
-printf "$LATEST_ARGON" > argon.Version;
-# boron
-LATEST_BORON=v$(curl https://nodejs.org/download/release/latest-v6.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
-printf "$LATEST_BORON" > boron.Version;
-# carbon
-LATEST_CARBON=v$(curl https://nodejs.org/download/release/latest-v8.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
-printf "$LATEST_CARBON" > carbon.Version;
+## base source
+DEFAULT_BASE_IMAGE_SOURCE="iron/base";
+## output: [$BASE_IMAGE_SOURCE, ./base.Version]
+CONF_SOURCE="${CONF_DIR}/BASE_IMAGE_SOURCE";
+CONF_SOURCE_EXISTS=$(stat ${CONF_SOURCE} > /dev/null 2&>/dev/null);
+[[ $? = "0" ]] &&
+  BASE_IMAGE_SOURCE=$(cat ${CONF_SOURCE}) ||
+  BASE_IMAGE_SOURCE=${DEFAULT_BASE_IMAGE_SOURCE};
+BASE_IMAGE_SOURCE_KEY="__BASE_IMAGE_SOURCE__";
+BASE_IMAGE_SOURCE_SED="s|${BASE_IMAGE_SOURCE_KEY}|${BASE_IMAGE_SOURCE}|g";
+printf "BASE_IMAGE_SOURCE:      $BASE_IMAGE_SOURCE\n";
+printf "$BASE_IMAGE_SOURCE" > ${SETUP_DIR}/base.Version;
 
-#### add more here in similar fashion as the years pass ####
+## base tag
+DEFAULT_BASE_IMAGE_TAG="3.4";
+## output: [$BASE_IMAGE_TAG, ./tag.Version]
+CONF_SOURCE="${CONF_DIR}/BASE_IMAGE_TAG";
+CONF_SOURCE_EXISTS=$(stat ${CONF_SOURCE} > /dev/null 2&>/dev/null);
+[[ $? = "0" ]] &&
+  BASE_IMAGE_TAG=$(cat ${CONF_SOURCE}) ||
+  BASE_IMAGE_TAG=${DEFAULT_BASE_IMAGE_TAG};
+BASE_IMAGE_TAG_KEY="__BASE_IMAGE_TAG__";
+BASE_IMAGE_TAG_SED="s|${BASE_IMAGE_TAG_KEY}|${BASE_IMAGE_TAG}|g";
+printf "BASE_IMAGE_TAG:         $BASE_IMAGE_TAG\n";
+printf "$BASE_IMAGE_TAG" > ${SETUP_DIR}/tag.Version;
 
-# get latest yarn version
-LATEST_YARN=$(curl https://yarnpkg.com/latest.tar.gz | cut -f 8 -d "/");
-printf "$LATEST_YARN" > yarn.Version;
+# get (latest||LTS) versions [[MAINTENANCE]]
+NODE_VERSION_KEY="__NODE_VERSION__";
 
-# prepare for build
-ALPINE_VERSION_KEY=__ALPINE_VERSION__;
-NODE_VERSION_KEY=__NODE_VERSION__;
-YARN_VERSION_KEY=__YARN_VERSION__;
-SED_REPLACE_YARN="s/${YARN_VERSION_KEY}/${LATEST_YARN}/g";
-SED_REPLACE_ALPINE="s/${ALPINE_VERSION_KEY}/${LATEST_ALPINE}/g";
+## yarn
+DEFAULT_YARN_VERSION=$(curl -s https://yarnpkg.com/latest.tar.gz | cut -f 8 -d "/");
+[[ $? != "0" ]] && DEFAULT_YARN_VERSION="v1.0.2";
+## output: [$YARN_VERSION, ${SETUP_DIR}/yarn.Version]
+CONF_SOURCE="${CONF_DIR}/YARN_VERSION";
+CONF_SOURCE_EXISTS=$(stat ${CONF_SOURCE} > /dev/null 2&>/dev/null);
+[[ $? = "0" ]] &&
+  YARN_VERSION=$(cat ${CONF_SOURCE}) ||
+  YARN_VERSION=${DEFAULT_YARN_VERSION};
+YARN_VERSION_KEY="__YARN_VERSION__";
+SED_REPLACE_YARN="s/${YARN_VERSION_KEY}/${YARN_VERSION}/g";
+printf "YARN_VERSION:           ${YARN_VERSION}\n";
+printf "$YARN_VERSION" > ${SETUP_DIR}/yarn.Version;
 
-# prepare argon
-sed -e "s/${NODE_VERSION_KEY}/${LATEST_ARGON}/g" \
-    -e "${SED_REPLACE_ALPINE}" \
-    -e "${SED_REPLACE_YARN}" \
-    -e "s/--without-intl/ /g" \
-    .Dockerfile > argon.Dockerfile;
-# prepare boron
-sed -e "s/${NODE_VERSION_KEY}/${LATEST_BORON}/g" \
-    -e "${SED_REPLACE_ALPINE}" \
-    -e "${SED_REPLACE_YARN}" \
-    .Dockerfile > boron.Dockerfile
-# prepare carbon
-sed -e "s/${NODE_VERSION_KEY}/${LATEST_CARBON}/g" \
-    -e "${SED_REPLACE_ALPINE}" \
-    -e "${SED_REPLACE_YARN}" \
-    .Dockerfile > carbon.Dockerfile
+## argon (4.x)
+DEFAULT_ARGON_VERSION=v$(curl -s https://nodejs.org/download/release/latest-v4.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
+[[ $? != "0" ]] && DEFAULT_ARGON_VERSION="v4.8.4"; # fallback 4.x
+## output: [$ARGON_VERSION, ${SETUP_DIR}/argon.Version, ${PROJ_DIR}/argon.Dockerfile]
+CONF_SOURCE="${CONF_DIR}/ARGON_VERSION";
+CONF_SOURCE_EXISTS=$(stat ${CONF_SOURCE} > /dev/null 2&>/dev/null);
+[[ $? = "0" ]] &&
+  ARGON_VERSION=$(cat ${CONF_SOURCE}) ||
+  ARGON_VERSION=${DEFAULT_ARGON_VERSION};
+sed \
+  -e "s/${NODE_VERSION_KEY}/${ARGON_VERSION}/g" \
+  -e "${BASE_IMAGE_SOURCE_SED}" \
+  -e "${BASE_IMAGE_TAG_SED}" \
+  -e "${SED_REPLACE_YARN}" \
+  -e "s/--without-intl/ /g" \
+  ${PROJ_DIR}/.Dockerfile > ${PROJ_DIR}/argon.Dockerfile;
+printf "ARGON_VERSION:          ${ARGON_VERSION}\n";
+printf "$ARGON_VERSION" > ${SETUP_DIR}/argon.Version;
 
-#### add more here in similar fashion as the years pass ####
+## boron (6.x)
+DEFAULT_BORON_VERSION=v$(curl -s https://nodejs.org/download/release/latest-v6.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
+[[ $? != "0" ]] && DEFAULT_BORON_VERSION="v6.11.3"; # fallback 6.x
+## output: [$BORON_VERSION, ${SETUP_DIR}/boron.Version, ${PROJ_DIR}/boron.Dockerfile]
+CONF_SOURCE="${CONF_DIR}/BORON_VERSION";
+CONF_SOURCE_EXISTS=$(stat ${CONF_SOURCE} > /dev/null 2&>/dev/null);
+[[ $? = "0" ]] &&
+  BORON_VERSION=$(cat ${CONF_SOURCE}) ||
+  BORON_VERSION=${DEFAULT_BORON_VERSION};
+sed \
+  -e "s/${NODE_VERSION_KEY}/${BORON_VERSION}/g" \
+  -e "${BASE_IMAGE_SOURCE_SED}" \
+  -e "${BASE_IMAGE_TAG_SED}" \
+  -e "${SED_REPLACE_YARN}" \
+  ${PROJ_DIR}/.Dockerfile > ${PROJ_DIR}/boron.Dockerfile;
+printf "BORON_VERSION:          ${BORON_VERSION}\n";
+printf "$BORON_VERSION" > ${SETUP_DIR}/boron.Version;
 
+## carbon (8.x)
+DEFAULT_CARBON_VERSION=v$(curl -s https://nodejs.org/download/release/latest-v8.x/ | grep '>node-v' | tail -n 1| cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".");
+[[ $? != "0" ]] && DEFAULT_CARBON_VERSION="v8.5.0"; # fallback 8.x
+## output: [$CARBON_VERSION, ${SETUP_DIR}/carbon.Version, ${PROJ_DIR}/carbon.Version]
+CONF_SOURCE="${CONF_DIR}/CARBON_VERSION";
+CONF_SOURCE_EXISTS=$(stat ${CONF_SOURCE} > /dev/null 2&>/dev/null);
+[[ $? = "0" ]] &&
+  CARBON_VERSION=$(cat ${CONF_SOURCE}) ||
+  CARBON_VERSION=${DEFAULT_CARBON_VERSION};
+sed \
+  -e "s/${NODE_VERSION_KEY}/${CARBON_VERSION}/g" \
+  -e "${BASE_IMAGE_SOURCE_SED}" \
+  -e "${BASE_IMAGE_TAG_SED}" \
+  -e "${SED_REPLACE_YARN}" \
+  ${PROJ_DIR}/.Dockerfile > ${PROJ_DIR}/carbon.Dockerfile
+printf "CARBON_VERSION:         ${CARBON_VERSION}\n";
+printf "$CARBON_VERSION" > ${SETUP_DIR}/carbon.Version;

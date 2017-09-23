@@ -1,9 +1,16 @@
 #!/bin/bash
 TAG_NAME=$1;
-NODE_VERSION=$(cat ./${TAG_NAME}.Version);
-YARN_VERSION="$(cat ./yarn.Version)";
+CURR_DIR=$(dirname $0);
+PROJ_DIR=${CURR_DIR}/../..;
+SETUP_DIR=${PROJ_DIR}/.setup;
+NODE_VERSION=$(cat ${SETUP_DIR}/${TAG_NAME}.Version);
 if [[ $? != "0" ]]; then
-  printf "[ERROR] ./yarn.Version could not be found.\n";
+  printf "[ERROR] ${SETUP_DIR}/yarn.Version could not be found.\n";
+  exit 1;
+fi;
+YARN_VERSION="$(cat ${SETUP_DIR}/yarn.Version)";
+if [[ $? != "0" ]]; then
+  printf "[ERROR] ${SETUP_DIR}/yarn.Version could not be found.\n";
   exit 1;
 fi;
 EXISTENCE_TAG="node-${NODE_VERSION}_yarn-${YARN_VERSION}";
