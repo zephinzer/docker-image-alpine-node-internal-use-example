@@ -1,7 +1,6 @@
 FROM zephinzer/alpine-node:__IMAGE_TAG__
 ENV EXTRA_APK_DEPENDENCIES=__EXTRA_APK_DEPENDENCIES__
-WORKDIR /app/.test
-COPY . /app/.test
+WORKDIR /app
 RUN mkdir -p /var/cache/apk && \
     apk update && \
     apk upgrade && \
@@ -10,4 +9,5 @@ RUN mkdir -p /var/cache/apk && \
     yarn cache clean && \
     apk del ${EXTRA_APK_DEPENDENCIES} && \
     rm -rf /var/cache/apk/*
+COPY . /app
 ENTRYPOINT ["npm", "run", "test"]
