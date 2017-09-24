@@ -10,4 +10,4 @@ RUN mkdir -p /var/cache/apk && \
     apk del ${EXTRA_APK_DEPENDENCIES} && \
     rm -rf /var/cache/apk/*
 COPY . /app
-ENTRYPOINT ["npm", "run", "test"]
+ENTRYPOINT ["./test-entry"]
