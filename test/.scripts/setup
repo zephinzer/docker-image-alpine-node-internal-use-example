@@ -8,6 +8,15 @@ if [[ $1 = "" ]]; then
 fi;
 ## </TEST_DIR>
 
+## <CODENAME_VERSION>
+CODENAME_VERSION=$2;
+CODENAME_VERSION_KEY="__IMAGE_TAG__";
+if [[ $CODENAME_VERSION = "" ]]; then
+  printf "\n\033[31m[ERR] Specify a Node codename as the second argument.\033[0m\n\n";
+  exit 1;
+fi;
+## </CODENAME_VERSION>
+
 ## <PROJ_DIR>
 PROJ_DIR=$(pwd)/$1;
 $(stat ${PROJ_DIR} &>/dev/null)
@@ -16,16 +25,6 @@ if [[ $? != "0" ]]; then
   exit 1;
 fi;
 ## </PROJ_DIR>
-
-## <TAGS_TO_TEST>
-$(cat ${TEST_DIR}/.tags-to-test &>/dev/null);
-if [[ $? != "0" ]]; then
-  printf "\n\033[31m[ERR] '${TEST_DIR}/.tags-to-test' does not exist. Create it and add tags of zephinzer/alpine-node to test!\033[0m\n\n";
-  exit 1;
-fi;
-TAGS_TO_TEST=$(cat ${TEST_DIR}/.tags-to-test);
-TAGS_TO_TEST_KEY="__IMAGE_TAG__";
-## </TAGS_TO_TEST>
 
 ## <EXTRA_APK_DEPENDENCIES>
 $(cat ${PROJ_DIR}/.extra-apk-dependencies &>/dev/null);
@@ -39,7 +38,7 @@ EXTRA_APK_DEPENDENCIES_KEY="__EXTRA_APK_DEPENDENCIES__";
 
 ## <generate_dockerfile>
 function generate_dockerfile {
-  printf "PROJ_DIR                  : $1\n"
+  printf "PROJ_DIR                   : $1\n"
   PROJ_DIR=$1;
   printf "EXTRA_APK_DEPENDENCIES_KEY : $2\n"
   EXTRA_APK_DEPENDENCIES_KEY=$2;
@@ -65,8 +64,5 @@ if [[ $? != "0" ]]; then
   printf "\n\033[31m[ERR] The template Dockerfile at '${PROJ_DIR}/.Dockerfile' does not exist. Define it so that this script can setup the relevant Dockerfiles.\033[0m\n\n";
   exit 1;
 fi;
-echo $TAGS_TO_TEST;
-echo $TAGS_TO_TEST | xargs -n 1 -I @ sed \
-  -e "s|$IMAGE_TAG_KEY|@|g" \
-  -e "s|$EXTRA_APK_DEPENDENCIES_KEY|$EXTRA_APK_DEPENDENCIES|g" \
-  "${PROJ_DIR}/.Dockerfile" > "${PROJ_DIR}/$TAG_NAME.Dockerfile";
+
+generate_dockerfile ${PROJ_DIR} ${EXTRA_APK_DEPENDENCIES_KEY} "\"${EXTRA_APK_DEPENDENCIES}\"" ${CODENAME_VERSION_KEY} ${CODENAME_VERSION};

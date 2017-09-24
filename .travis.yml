@@ -54,14 +54,15 @@ jobs:
       env:
         - framework=react
         - testingWith=argon
+        - TAG_NAME=latest-argon
       script:
-        - docker pull ${DOCKER_REPO}:latest-argon
+        - docker pull ${DOCKER_REPO}:${TAG_NAME}
         - |
           cd ./test && \
-          ./.scripts/setup react-development && \
+          ./.scripts/setup react-development ${TAG_NAME} && \
           cd ./react-development && \
           docker build \
-            -f ./latest-argon.Dockerfile \
+            -f ./${TAG_NAME}.Dockerfile \
             -t test_argon .
         - docker run test_argon
         - cd ./test && ./.scripts/teardown react-development
@@ -69,14 +70,15 @@ jobs:
       env:
         - framework=react
         - testingWith=boron
+        - TAG_NAME=latest-carbon
       script:
-        - docker pull ${DOCKER_REPO}:latest-boron
+        - docker pull ${DOCKER_REPO}:${TAG_NAME}
         - |
           cd ./test && \
-          ./.scripts/setup react-development && \
+          ./.scripts/setup react-development ${TAG_NAME} && \
           cd ./react-development && \
           docker build \
-            -f ./latest-boron.Dockerfile \
+            -f ./${TAG_NAME}.Dockerfile \
             -t test_boron .
         - docker run test_boron
         - cd ./test && ./.scripts/teardown react-development
@@ -84,14 +86,15 @@ jobs:
       env:
         - framework=react
         - testingWith=carbon
+        - TAG_NAME=latest-carbon
       script:
-        - docker pull ${DOCKER_REPO}:latest-carbon
+        - docker pull ${DOCKER_REPO}:${TAG_NAME}
         - |
           cd ./test && \
-          ./.scripts/setup react-development && \
+          ./.scripts/setup react-development ${TAG_NAME} && \
           cd ./react-development && \
           docker build \ 
-            -f ./latest-carbon.Dockerfile \
+            -f ./${TAG_NAME}.Dockerfile \
             -t test_carbon .
         - docker run test_carbon
         - cd ./test && ./.scripts/teardown react-development
