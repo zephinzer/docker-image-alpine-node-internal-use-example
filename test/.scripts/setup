@@ -41,10 +41,10 @@ EXTRA_APK_DEPENDENCIES_KEY="__EXTRA_APK_DEPENDENCIES__";
 function generate_dockerfile {
   printf "PROJ_DIR                  : $1\n"
   PROJ_DIR=$1;
-  printf "EXTRA_APK_DEPENDENCIES_KEY : $3\n"
-  EXTRA_APK_DEPENDENCIES_KEY=$3;
-  printf "EXTRA_APK_DEPENDENCIES     : $4\n"
-  EXTRA_APK_DEPENDENCIES=$4;
+  printf "EXTRA_APK_DEPENDENCIES_KEY : $2\n"
+  EXTRA_APK_DEPENDENCIES_KEY=$2;
+  printf "EXTRA_APK_DEPENDENCIES     : $3\n"
+  EXTRA_APK_DEPENDENCIES=$3;
   printf "IMAGE_TAG_KEY              : $4\n"
   IMAGE_TAG_KEY=$4;
   printf "TAG_NAME                   : $5\n"
