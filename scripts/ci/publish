@@ -1,14 +1,10 @@
 #!/bin/bash
+CURR_DIR=$(dirname $0);
 if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
   git checkout ${TRAVIS_BRANCH};
-  git reset --hard ${TRAVIS_COMMIT};
-  ./scripts/versioning/iterate -i -q;
-  git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin master --tags;
-  git remote -v;
-  git pull;
-  git fetch origin;
-  git branch;
-  git checkout release;
+  ${CURR_DIR}/../versioning/iterate -i -q;
+  git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags;
+  git checkout -b release;
   git rebase ${TRAVIS_BRANCH};
-  git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin release --tags; \
+  git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags;
 fi;
