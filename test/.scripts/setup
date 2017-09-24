@@ -65,7 +65,7 @@ if [[ $? != "0" ]]; then
   printf "\n\033[31m[ERR] The template Dockerfile at '${PROJ_DIR}/.Dockerfile' does not exist. Define it so that this script can setup the relevant Dockerfiles.\033[0m\n\n";
   exit 1;
 fi;
-echo $TAGS_TO_TEST | xargs -n1 -I @ \
+echo $TAGS_TO_TEST | xargs -d '\n' -n1 -I @ \
   bash -c "generate_dockerfile \
     ${PROJ_DIR} \
     ${TAGS_TO_TEST_KEY} @ \
