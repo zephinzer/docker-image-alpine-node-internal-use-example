@@ -23,10 +23,6 @@ stages:
   - build
   - test-react-development
   - publish
-before_script:
-  - docker login -u $DHUSER -p $DHPASS
-after_script:
-  - docker logout
 jobs:
   include: # <codename>-<node_version>, <build_version>-<codename>, latest-<codename>
     - stage: build

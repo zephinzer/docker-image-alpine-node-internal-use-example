@@ -22,12 +22,14 @@ if [[ $? != "0" ]] || [[ $TRAVIS_COMMIT_MESSAGE == *"[force build]"* ]]; then
   docker build -t next -f ${TAG_NAME}.Dockerfile .;
   if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
     printf "[PUBLISHING] TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST, pushing latest ${TAG_NAME} to Docker Hub...\n";
+    docker login -u $DHUSER -p $DHPASS;
     docker tag next  ${DOCKER_REPO}:${NODE_VERSION};
     docker push      ${DOCKER_REPO}:${NODE_VERSION};
     docker tag next  ${DOCKER_REPO}:${EXISTENCE_TAG};
     docker push      ${DOCKER_REPO}:${EXISTENCE_TAG};
     docker tag next  ${DOCKER_REPO}:latest-${TAG_NAME};
     docker push      ${DOCKER_REPO}:latest-${TAG_NAME};
+    docker logout;
   else
     printf "[SKIPPED PUBLISHING] TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST, no further action required.\n";
   fi;
