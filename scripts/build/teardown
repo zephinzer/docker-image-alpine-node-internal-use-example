@@ -3,4 +3,6 @@ CURR_DIR=$(dirname $0);
 PROJ_DIR=${CURR_DIR}/../..;
 SETUP_DIR=${PROJ_DIR}/.setup;
 
-rm -rf ${SETUP_DIR} ${PROJ_DIR}/argon.* ${PROJ_DIR}/boron.* ${PROJ_DIR}/carbon.*;
+mv ${PROJ_DIR}/.Dockerfile ${PROJ_DIR}/Dockerfile;
+rm -rf ${SETUP_DIR} ${PROJ_DIR}/*.Dockerfile;
+mv ${PROJ_DIR}/Dockerfile ${PROJ_DIR}/.Dockerfile;
