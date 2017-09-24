@@ -67,22 +67,4 @@ jobs:
         - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
     - stage: publish
       script:
-        - |
-          if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then \
-            git checkout ${TRAVIS_BRANCH} && \
-            git reset --hard ${TRAVIS_COMMIT} && \
-            ./scripts/versioning/iterate -i -q && \
-            git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin master --tags; \
-          fi;
-      after_success:
-        - |
-          if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then \
-            git checkout ${TRAVIS_BRANCH} && \
-            git remote -v && \
-            git pull && \
-            git fetch origin && \
-            git branch && \
-            git checkout release && \
-            git rebase ${TRAVIS_BRANCH} && \
-            git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin release --tags; \
-          fi;
+        - ./scripts/ci/publish
