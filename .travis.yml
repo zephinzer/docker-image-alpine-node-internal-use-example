@@ -52,52 +52,37 @@ jobs:
         - ./scripts/build/teardown
     - stage: test-react-development
       env:
-        - framework=react
-        - testingWith=argon
-        - TAG_NAME=latest-argon
+        - FRAMEWORK=react-development
+        - REMOTE_TAG=latest-argon
+        - LOCAL_TAG=test_argon_react
       script:
-        - docker pull ${DOCKER_REPO}:${TAG_NAME}
-        - |
-          cd ./test && \
-          ./.scripts/setup react-development ${TAG_NAME} && \
-          cd ./react-development && \
-          docker build \
-            -f ./${TAG_NAME}.Dockerfile \
-            -t test_argon .
-        - docker run test_argon
-        - cd ./test && ./.scripts/teardown react-development
+        - docker pull ${DOCKER_REPO}:${REMOTE_TAG};
+        - ./test/.scripts/setup ${FRAMEWORK} ${REMOTE_TAG};
+        - docker build -f ./test/${FRAMEWORK}/${REMOTE_TAG}.Dockerfile -t ${LOCAL_TAG} ./test/${FRAMEWORK};
+        - docker run ${LOCAL_TAG};
+        - ./test/.scripts/teardown ${FRAMEWORK};
     - stage: test-react-development
       env:
-        - framework=react
-        - testingWith=boron
-        - TAG_NAME=latest-boron
+        - FRAMEWORK=react-development
+        - REMOTE_TAG=latest-boron
+        - LOCAL_TAG=test_boron_react
       script:
-        - docker pull ${DOCKER_REPO}:${TAG_NAME}
-        - |
-          cd ./test && \
-          ./.scripts/setup react-development ${TAG_NAME} && \
-          cd ./react-development && \
-          docker build \
-            -f ./${TAG_NAME}.Dockerfile \
-            -t test_boron .
-        - docker run test_boron
-        - cd ./test && ./.scripts/teardown react-development
+        - docker pull ${DOCKER_REPO}:${REMOTE_TAG};
+        - ./test/.scripts/setup ${FRAMEWORK} ${REMOTE_TAG};
+        - docker build -f ./test/${FRAMEWORK}/${REMOTE_TAG}.Dockerfile -t ${LOCAL_TAG} ./test/${FRAMEWORK};
+        - docker run ${LOCAL_TAG};
+        - ./test/.scripts/teardown ${FRAMEWORK};
     - stage: test-react-development
       env:
-        - framework=react
-        - testingWith=carbon
-        - TAG_NAME=latest-carbon
+        - FRAMEWORK=react-development
+        - REMOTE_TAG=latest-carbon
+        - LOCAL_TAG=test_carbon_react
       script:
-        - docker pull ${DOCKER_REPO}:${TAG_NAME}
-        - |
-          cd ./test && \
-          ./.scripts/setup react-development ${TAG_NAME} && \
-          cd ./react-development && \
-          docker build \ 
-            -f ./${TAG_NAME}.Dockerfile \
-            -t test_carbon .
-        - docker run test_carbon
-        - cd ./test && ./.scripts/teardown react-development
+        - docker pull ${DOCKER_REPO}:${REMOTE_TAG};
+        - ./test/.scripts/setup ${FRAMEWORK} ${REMOTE_TAG};
+        - docker build -f ./test/${FRAMEWORK}/${REMOTE_TAG}.Dockerfile -t ${LOCAL_TAG} ./test/${FRAMEWORK};
+        - docker run ${LOCAL_TAG};
+        - ./test/.scripts/teardown ${FRAMEWORK};
     - stage: publish
       script:
         - |

@@ -13,7 +13,8 @@ printf "Yarn       : $(yarn --version) @ $(which yarn)\n";
 printf "\$PWD       : $(pwd)\n";
 printf "\$PATH      : ${PATH}\n\n";
 printf "== + == Disk Info == + == \n";
-printf "$(df -h)\n\n";
+printf "$(df -h)\n";
+printf "$(df -i)\n\n";
 printf "== + == Installed APKs == + == \n";
 printf "$(apk info -vv | sort)\n\n";
 printf "== + == Cached APKs == + == \n";
@@ -32,3 +33,7 @@ printf "$(ifconfig)\n\n";
 printf "$(netstat -tupln)\n\n";
 printf "== + == Open Pipes Info == + == \n":
 printf "$(lsof -i)\n\n";
+printf "== + == System Binaries == + == \n":
+printf "$(ls -hl /usr/bin)\n\n";
+printf "== + == User Binaries == + == \n":
+printf "$(ls -hl /usr/local/bin)\n\n";
