@@ -21,7 +21,7 @@ notifications:
     - dev@joeir.net
 stages:
   - build
-  - test
+  - test-react-development
   - publish
 before_script:
   - docker login -u $DHUSER -p $DHPASS
@@ -50,29 +50,50 @@ jobs:
         - ./scripts/build/setup
         - ./scripts/ci/build carbon
         - ./scripts/build/teardown
-    - stage: test
+    - stage: test-react-development
       env:
         - framework=react
         - testingWith=argon
+      before_script:
+        - cd ./test && ./.scripts/setup react-development
+      after_script:
+        - cd ./test && ./.scripts/teardown react-development
       script:
-        - docker pull ${DOCKER_REPO}:latest-${TAG_ARGON}
-        - cd ./test/react && docker build -f ./argon.Dockerfile -t test_argon .
+        - docker pull ${DOCKER_REPO}:latest-argon
+        - |
+          cd ./test/react && docker build \
+          -f ./latest-argon.Dockerfile \
+          -t test_argon .
         - docker run test_argon
-    - stage: test
+    - stage: test-react-development
       env:
         - framework=react
         - testingWith=boron
+      before_script:
+        - cd ./test && ./.scripts/setup react-development
+      after_script:
+        - cd ./test && ./.scripts/teardown react-development
       script:
-        - docker pull ${DOCKER_REPO}:latest-${TAG_BORON}
-        - cd ./test/react && docker build -f ./boron.Dockerfile -t test_boron .
+        - docker pull ${DOCKER_REPO}:latest-boron
+        - |
+          cd ./test/react && docker build \
+            -f ./latest-boron.Dockerfile \
+            -t test_boron .
         - docker run test_boron
-    - stage: test
+    - stage: test-react-development
       env:
         - framework=react
         - testingWith=carbon
+      before_script:
+        - cd ./test && ./.scripts/setup react-development
+      after_script:
+        - cd ./test && ./.scripts/teardown react-development
       script:
-        - docker pull ${DOCKER_REPO}:latest-${TAG_CARBON}
-        - cd ./test/react && docker build -f ./carbon.Dockerfile -t test_carbon .
+        - docker pull ${DOCKER_REPO}:latest-carbon
+        - |
+          cd ./test/react && docker build \ 
+            -f ./latest-carbon.Dockerfile \
+            -t test_carbon .
         - docker run test_carbon
     - stage: publish
       script:

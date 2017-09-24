@@ -1,0 +1,65 @@
+#!/bin/bash
+
+## <TEST_DIR>
+TEST_DIR=$(dirname $0)/..;
+if [[ $1 = "" ]]; then
+  printf "\n\033[31m[ERR] Specify a project folder as the first argument\033[0m\n\n";
+  exit 1;
+fi;
+## </TEST_DIR>
+
+## <PROJ_DIR>
+PROJ_DIR=$(pwd)/$1;
+$(stat ${PROJ_DIR} &>/dev/null)
+if [[ $? != "0" ]]; then
+  printf "\n\033[31m[ERR] The specified project folder at '${PROJ_DIR}' does not exist.\033[0m\n\n";
+  exit 1;
+fi;
+## </PROJ_DIR>
+
+## <TAGS_TO_TEST>
+$(cat ${TEST_DIR}/.tags-to-test &>/dev/null);
+if [[ $? != "0" ]]; then
+  printf "\n\033[31m[ERR] '${TEST_DIR}/.tags-to-test' does not exist. Create it and add tags of zephinzer/alpine-node to test!\033[0m\n\n";
+  exit 1;
+fi;
+TAGS_TO_TEST=$(cat ${TEST_DIR}/.tags-to-test);
+TAGS_TO_TEST_KEY="__IMAGE_TAG__";
+## </TAGS_TO_TEST>
+
+## <EXTRA_APK_DEPENDENCIES>
+$(cat ${PROJ_DIR}/.extra-apk-dependencies &>/dev/null);
+if [[ $? != "0" ]]; then
+  printf "\n\033[31m[ERR] '${PROJ_DIR}/.extra-apk-dependencies' does not exist. Define it with a single line of additional APK dependencies needed to make this test case work!\033[0m\n\n";
+  exit 1;
+fi;
+EXTRA_APK_DEPENDENCIES=$(cat ${PROJ_DIR}/.extra-apk-dependencies);
+EXTRA_APK_DEPENDENCIES_KEY="__EXTRA_APK_DEPENDENCIES__";
+## </EXTRA_APK_DEPENDENCIES>
+
+## <generate_dockerfile>
+function generate_dockerfile {
+  PROJ_DIR=$1;
+  IMAGE_TAG_KEY=$2;
+  TAG_NAME=$3;
+  EXTRA_APK_DEPENDENCIES_KEY=$4;
+  EXTRA_APK_DEPENDENCIES=$5;
+  sed \
+    -e "s|$IMAGE_TAG_KEY|$TAG_NAME|g" \
+    -e "s|$EXTRA_APK_DEPENDENCIES_KEY|$EXTRA_APK_DEPENDENCIES|g" \
+    "${PROJ_DIR}/.Dockerfile" > "${PROJ_DIR}/$TAG_NAME.Dockerfile";
+};
+export -f generate_dockerfile;
+## </generate_dockerfile>
+
+## create the necessary files from the .Dockerfile template
+$(stat ${PROJ_DIR}/.Dockerfile &>/dev/null);
+if [[ $? != "0" ]]; then
+  printf "\n\033[31m[ERR] The template Dockerfile at '${PROJ_DIR}/.Dockerfile' does not exist. Define it so that this script can setup the relevant Dockerfiles.\033[0m\n\n";
+  exit 1;
+fi;
+echo $TAGS_TO_TEST | xargs -n1 -I @ \
+  bash -c "generate_dockerfile \
+    ${PROJ_DIR} \
+    ${TAGS_TO_TEST_KEY} @ \
+    ${EXTRA_APK_DEPENDENCIES_KEY} ${EXTRA_APK_DEPENDENCIES}";

@@ -1,0 +1,21 @@
+#!/bin/bash
+## <TEST_DIR>
+TEST_DIR=$(dirname $0)/..;
+if [[ $1 = "" ]]; then
+  printf "\n\033[31m[ERR] Specify a project folder as the first argument\033[0m\n\n";
+  exit 1;
+fi;
+## </TEST_DIR>
+
+## <PROJ_DIR>
+PROJ_DIR=$(pwd)/$1;
+$(stat ${PROJ_DIR} &>/dev/null)
+if [[ $? != "0" ]]; then
+  printf "\n\033[31m[ERR] The specified project folder at '${PROJ_DIR}' does not exist.\033[0m\n\n";
+  exit 1;
+fi;
+## </PROJ_DIR>
+
+mv ${PROJ_DIR}/.Dockerfile ${PROJ_DIR}/Dockerfile;
+rm -rf ${PROJ_DIR}/*.Dockerfile;
+mv ${PROJ_DIR}/Dockerfile ${PROJ_DIR}/.Dockerfile;
