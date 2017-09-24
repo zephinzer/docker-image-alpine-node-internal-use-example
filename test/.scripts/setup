@@ -39,13 +39,16 @@ EXTRA_APK_DEPENDENCIES_KEY="__EXTRA_APK_DEPENDENCIES__";
 
 ## <generate_dockerfile>
 function generate_dockerfile {
+  printf "PROJ_DIR                  : $1\n"
   PROJ_DIR=$1;
+  printf "IMAGE_TAG_KEY              : $2\n"
   IMAGE_TAG_KEY=$2;
+  printf "TAG_NAME                   : $3\n"
   TAG_NAME=$3;
+  printf "EXTRA_APK_DEPENDENCIES_KEY : $4\n"
   EXTRA_APK_DEPENDENCIES_KEY=$4;
+  printf "EXTRA_APK_DEPENDENCIES     : $5\n"
   EXTRA_APK_DEPENDENCIES=$5;
-  printf "EXTRA_APK_DEPENDENCIES_KEY : ${EXTRA_APK_DEPENDENCIES_KEY}\n"
-  printf "EXTRA_APK_DEPENDENCIES     : ${EXTRA_APK_DEPENDENCIES}"
   sed \
     -e "s|$IMAGE_TAG_KEY|$TAG_NAME|g" \
     -e "s|$EXTRA_APK_DEPENDENCIES_KEY|$EXTRA_APK_DEPENDENCIES|g" \
