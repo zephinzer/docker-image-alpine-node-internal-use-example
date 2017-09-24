@@ -34,19 +34,24 @@ Being designed for open-source for close-sourced usage, this image includes lots
 
 For example, if you wanted to use `centos/centos:7` as your base image to build Node Carbon v8.4.0 and include Yarn v1.0.0,
 
-1. Clone this repository.
--  Add a file named `BASE_IMAGE_SOURCE` in `./conf.d`.
--  Add `centos/centos` to `./conf.d/BASE_IMAGE_SOURCE`.
--  Add a file named `BASE_IMAGE_TAG` in `./conf.d`.
--  Add `7` to `./conf.d/BASE_IMAGE_TAG`.
--  Add a file named `CARBON_VERSION` in `./conf.d`.
--  Add `v8.4.0` to `./conf.d/CARBON_VERSION`.
--  Add a file named `YARN_VERSION` in `./conf.d`.
--  Add `v1.0.0` to `./conf.d/YARN_VERSION`.
--  Run `./scripts/build/setup` to create build files.
--  Run `docker build -f carbon.Dockerfile -t my_carbon .`.
--  Run `./scripts/build/teardown` to remove build files.
--  Run `docker images` and you'll find your image tagged with `my_carbon`.
+- Clone this repository
+> `git clone git@github.com:zephinzer/docker-image-alpine-node.git`
+- Add a file named `BASE_IMAGE_SOURCE` in `./conf.d` with `centos/centos` as it's content
+> `printf "centos/centos" > ./conf.d/BASE_IMAGE_SOURCE`
+- Add a file named `BASE_IMAGE_TAG` in `./conf.d` with `7` as it's content
+> `printf "7" > ./conf.d/BASE_IMAGE_TAG`
+- Add a file named `CARBON_VERSION` in `./conf.d` with `v8.4.0` as it's content
+> `printf "v8.4.0" > ./conf.d/CARBON_VERSION`
+- Add a file named `YARN_VERSION` in `./conf.d` with `v1.0.0` as it's content.
+> `printf "v1.0.0" > ./conf.d/YARN_VERSION`
+- Create the build files:
+> `./scripts/build/setup`
+- Build the image:
+> `docker build -f carbon.Dockerfile -t my_carbon .`
+- Remove the build files:
+> `./scripts/build/teardown`
+- Find your image:
+> `docker images | grep my_carbon`
 
 This may be unnecessarily complicated, but we use this process so that we can open-source our logic, but use internally scanned and tested base images within our own products.
 
