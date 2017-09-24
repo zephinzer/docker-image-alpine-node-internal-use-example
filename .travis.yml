@@ -97,16 +97,22 @@ jobs:
         - docker run test_carbon
     - stage: publish
       script:
-        - git checkout ${TRAVIS_BRANCH}
-        - git reset --hard ${TRAVIS_COMMIT}
-        - ./scripts/versioning/iterate -i -q
-        - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags
+        - |
+          if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then \
+            git checkout ${TRAVIS_BRANCH} && \
+            git reset --hard ${TRAVIS_COMMIT} && \
+            ./scripts/versioning/iterate -i -q && \
+            git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags; \
+          fi;
       after_success:
-        - git checkout ${TRAVIS_BRANCH}
-        - git remote -v
-        - git pull
-        - git fetch origin
-        - git branch
-        - git checkout release
-        - git rebase ${TRAVIS_BRANCH}
-        - git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin release
+        - |
+          if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then \
+            git checkout ${TRAVIS_BRANCH} && \
+            git remote -v && \
+            git pull && \
+            git fetch origin && \
+            git branch && \
+            git checkout release && \
+            git rebase ${TRAVIS_BRANCH} && \
+            git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin release; \
+          fi;
