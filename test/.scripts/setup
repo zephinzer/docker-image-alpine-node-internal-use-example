@@ -62,4 +62,4 @@ echo $TAGS_TO_TEST | xargs -n1 -I @ \
   bash -c "generate_dockerfile \
     ${PROJ_DIR} \
     ${TAGS_TO_TEST_KEY} @ \
-    ${EXTRA_APK_DEPENDENCIES_KEY} ${EXTRA_APK_DEPENDENCIES}";
+    ${EXTRA_APK_DEPENDENCIES_KEY} '\"${EXTRA_APK_DEPENDENCIES}\"'";
