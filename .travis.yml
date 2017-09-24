@@ -61,7 +61,7 @@ jobs:
       script:
         - docker pull ${DOCKER_REPO}:latest-argon
         - |
-          cd ./test/react-development && docker build \
+          cd ./react-development && docker build \
           -f ./latest-argon.Dockerfile \
           -t test_argon .
         - docker run test_argon
@@ -76,7 +76,7 @@ jobs:
       script:
         - docker pull ${DOCKER_REPO}:latest-boron
         - |
-          cd ./test/react-development && docker build \
+          cd ./react-development && docker build \
             -f ./latest-boron.Dockerfile \
             -t test_boron .
         - docker run test_boron
@@ -91,7 +91,7 @@ jobs:
       script:
         - docker pull ${DOCKER_REPO}:latest-carbon
         - |
-          cd ./test/react-development && docker build \ 
+          cd ./react-development && docker build \ 
             -f ./latest-carbon.Dockerfile \
             -t test_carbon .
         - docker run test_carbon

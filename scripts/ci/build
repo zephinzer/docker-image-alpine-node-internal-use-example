@@ -18,12 +18,17 @@ EXISTENCE_CHECK=$(curl --silent -f -lSL https://index.docker.io/v1/repositories/
 if [[ $? != "0" ]] || [[ $TRAVIS_COMMIT_MESSAGE == *"[force build]"* ]]; then
   printf "[BUILDING] TAG:${EXISTENCE_TAG} was NOT found. Building...\n";
   docker build -t next -f ${TAG_NAME}.Dockerfile .;
-  docker tag next  ${DOCKER_REPO}:${NODE_VERSION};
-  docker push      ${DOCKER_REPO}:${NODE_VERSION};
-  docker tag next  ${DOCKER_REPO}:${EXISTENCE_TAG};
-  docker push      ${DOCKER_REPO}:${EXISTENCE_TAG};
-  docker tag next  ${DOCKER_REPO}:latest-${TAG_NAME};
-  docker push      ${DOCKER_REPO}:latest-${TAG_NAME};
+  if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
+    printf "[PUBLISHING] TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST, pushing latest ${TAG_NAME} to Docker Hub...\n";
+    docker tag next  ${DOCKER_REPO}:${NODE_VERSION};
+    docker push      ${DOCKER_REPO}:${NODE_VERSION};
+    docker tag next  ${DOCKER_REPO}:${EXISTENCE_TAG};
+    docker push      ${DOCKER_REPO}:${EXISTENCE_TAG};
+    docker tag next  ${DOCKER_REPO}:latest-${TAG_NAME};
+    docker push      ${DOCKER_REPO}:latest-${TAG_NAME};
+  else
+    printf "[SKIPPED PUBLISHING] TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST, no further action required.\n";
+  fi;
 else
   printf "[SKIPPED] TAG:${EXISTENCE_TAG} was found. Skipping build...\n";
 fi;
