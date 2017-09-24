@@ -72,7 +72,7 @@ jobs:
             git checkout ${TRAVIS_BRANCH} && \
             git reset --hard ${TRAVIS_COMMIT} && \
             ./scripts/versioning/iterate -i -q && \
-            git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git --tags; \
+            git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin master --tags; \
           fi;
       after_success:
         - |
@@ -84,5 +84,5 @@ jobs:
             git branch && \
             git checkout release && \
             git rebase ${TRAVIS_BRANCH} && \
-            git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin release; \
+            git push -q https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git origin release --tags; \
           fi;
