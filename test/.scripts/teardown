@@ -8,7 +8,7 @@ fi;
 ## </TEST_DIR>
 
 ## <PROJ_DIR>
-PROJ_DIR=$(pwd)/$1;
+PROJ_DIR=$(TEST_DIR)/$1;
 $(stat ${PROJ_DIR} &>/dev/null)
 if [[ $? != "0" ]]; then
   printf "\n\033[31m[ERR] The specified project folder at '${PROJ_DIR}' does not exist.\033[0m\n\n";

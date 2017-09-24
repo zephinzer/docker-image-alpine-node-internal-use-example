@@ -3,6 +3,8 @@ TAG_NAME=$1;
 CURR_DIR=$(dirname $0);
 PROJ_DIR=${CURR_DIR}/../..;
 SETUP_DIR=${PROJ_DIR}/.setup;
+
+${CURR_DIR}/../build/setup;
 NODE_VERSION=$(cat ${SETUP_DIR}/${TAG_NAME}.Version);
 if [[ $? != "0" ]]; then
   printf "[ERROR] ${SETUP_DIR}/yarn.Version could not be found.\n";
@@ -32,4 +34,4 @@ if [[ $? != "0" ]] || [[ $TRAVIS_COMMIT_MESSAGE == *"[force build]"* ]]; then
 else
   printf "[SKIPPED] TAG:${EXISTENCE_TAG} was found. Skipping build...\n";
 fi;
-./scripts/build/teardown;
+${CURR_DIR}/../build/teardown;

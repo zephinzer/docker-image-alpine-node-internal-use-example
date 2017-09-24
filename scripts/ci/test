@@ -1,0 +1,15 @@
+#!/bin/bash
+CURR_DIR=$(dirname $0);
+PROJ_DIR=${CURR_DIR}/../..;
+FRAMEWORK=$1;
+REMOTE_TAG=$2;
+LOCAL_TAG=$3;
+if [[ $DOCKER_REPO = "" ]]; then
+  printf "\n\033[31m[ERR] The \$DOCKER_REPO environment variable was not set\033[0m\n\n";
+  exit 1;
+fi;
+docker pull ${DOCKER_REPO}:${REMOTE_TAG};
+${PROJ_DIR}/test/.scripts/setup ${FRAMEWORK} ${REMOTE_TAG};
+docker build -f ${PROJ_DIR}/test/${FRAMEWORK}/${REMOTE_TAG}.Dockerfile -t ${LOCAL_TAG} ${PROJ_DIR}/test/${FRAMEWORK};
+docker run ${LOCAL_TAG};
+${PROJ_DIR}/test/.scripts/teardown ${FRAMEWORK};
