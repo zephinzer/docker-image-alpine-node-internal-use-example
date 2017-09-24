@@ -10,4 +10,4 @@ RUN mkdir -p /var/cache/apk && \
     yarn cache clean && \
     apk del ${EXTRA_APK_DEPENDENCIES} && \
     rm -rf /var/cache/apk/*
-ENTRYPOINT ["./test-entry"]
+ENTRYPOINT ["npm", "run", "test"]

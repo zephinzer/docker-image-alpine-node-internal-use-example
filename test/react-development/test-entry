@@ -1,10 +1,10 @@
 #!/bin/bash
 # extra scripts to test functionality after installation
 
-printf "Container info\n"
+printf "Container info\n";
 printf "Node : $(node --version)\n";
 printf "Yarn : $(yarn --version)\n";
 printf "NPM  : $(npm --v)\n\n";
 
 printf "APK info\n";
-printf $(apk info -vv)
+printf $(apk info -vv);

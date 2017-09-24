@@ -1,4 +1,7 @@
 {
+  "scripts": {
+    "test": "./test-entry"
+  },
   "devDependencies": {
     "babel-loader": "^7.1.2",
     "babel-plugin-react-css-modules": "^3.3.0",
