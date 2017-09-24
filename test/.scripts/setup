@@ -66,4 +66,7 @@ if [[ $? != "0" ]]; then
   exit 1;
 fi;
 echo $TAGS_TO_TEST;
-echo $TAGS_TO_TEST | xargs -n 1 -I @ bash -c "generate_dockerfile ${PROJ_DIR} ${EXTRA_APK_DEPENDENCIES_KEY} '\"${EXTRA_APK_DEPENDENCIES}\"' ${TAGS_TO_TEST_KEY} @";
+echo $TAGS_TO_TEST | xargs -n 1 -I @ sed \
+  -e "s|$IMAGE_TAG_KEY|@|g" \
+  -e "s|$EXTRA_APK_DEPENDENCIES_KEY|$EXTRA_APK_DEPENDENCIES|g" \
+  "${PROJ_DIR}/.Dockerfile" > "${PROJ_DIR}/$TAG_NAME.Dockerfile";
