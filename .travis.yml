@@ -59,9 +59,10 @@ jobs:
         - |
           cd ./test && \
           ./.scripts/setup react-development && \
-          cd ./react-development && docker build \
-          -f ./latest-argon.Dockerfile \
-          -t test_argon .
+          cd ./react-development && \
+          docker build \
+            -f ./latest-argon.Dockerfile \
+            -t test_argon .
         - docker run test_argon
         - cd ./test && ./.scripts/teardown react-development
     - stage: test-react-development
@@ -73,7 +74,8 @@ jobs:
         - |
           cd ./test && \
           ./.scripts/setup react-development && \
-          cd ./react-development && docker build \
+          cd ./react-development && \
+          docker build \
             -f ./latest-boron.Dockerfile \
             -t test_boron .
         - docker run test_boron
@@ -87,7 +89,8 @@ jobs:
         - |
           cd ./test && \
           ./.scripts/setup react-development && \
-          cd ./react-development && docker build \ 
+          cd ./react-development && \
+          docker build \ 
             -f ./latest-carbon.Dockerfile \
             -t test_carbon .
         - docker run test_carbon
