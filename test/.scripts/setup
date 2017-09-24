@@ -41,14 +41,14 @@ EXTRA_APK_DEPENDENCIES_KEY="__EXTRA_APK_DEPENDENCIES__";
 function generate_dockerfile {
   printf "PROJ_DIR                  : $1\n"
   PROJ_DIR=$1;
-  printf "IMAGE_TAG_KEY              : $2\n"
-  IMAGE_TAG_KEY=$2;
-  printf "TAG_NAME                   : $3\n"
-  TAG_NAME=$3;
-  printf "EXTRA_APK_DEPENDENCIES_KEY : $4\n"
-  EXTRA_APK_DEPENDENCIES_KEY=$4;
-  printf "EXTRA_APK_DEPENDENCIES     : $5\n"
-  EXTRA_APK_DEPENDENCIES=$5;
+  printf "EXTRA_APK_DEPENDENCIES_KEY : $3\n"
+  EXTRA_APK_DEPENDENCIES_KEY=$3;
+  printf "EXTRA_APK_DEPENDENCIES     : $4\n"
+  EXTRA_APK_DEPENDENCIES=$4;
+  printf "IMAGE_TAG_KEY              : $4\n"
+  IMAGE_TAG_KEY=$4;
+  printf "TAG_NAME                   : $5\n"
+  TAG_NAME=$5;
   sed \
     -e "s|$IMAGE_TAG_KEY|$TAG_NAME|g" \
     -e "s|$EXTRA_APK_DEPENDENCIES_KEY|$EXTRA_APK_DEPENDENCIES|g" \
@@ -68,5 +68,5 @@ fi;
 echo $TAGS_TO_TEST | xargs -n 1 -I % \
   bash -c "generate_dockerfile \
     ${PROJ_DIR} \
-    ${TAGS_TO_TEST_KEY} "%" \
     ${EXTRA_APK_DEPENDENCIES_KEY} '\"${EXTRA_APK_DEPENDENCIES}\"'";
+    ${TAGS_TO_TEST_KEY} "%" \
