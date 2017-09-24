@@ -48,6 +48,8 @@ function generate_dockerfile {
     -e "s|$IMAGE_TAG_KEY|$TAG_NAME|g" \
     -e "s|$EXTRA_APK_DEPENDENCIES_KEY|$EXTRA_APK_DEPENDENCIES|g" \
     "${PROJ_DIR}/.Dockerfile" > "${PROJ_DIR}/$TAG_NAME.Dockerfile";
+  printf "Created '${PROJ_DIR}/$TAG_NAME.Dockerfile'... with contents: \n";
+  cat ${PROJ_DIR}/$TAG_NAME.Dockerfile;
 };
 export -f generate_dockerfile;
 ## </generate_dockerfile>
