@@ -68,8 +68,35 @@ This image also runs tests on the Docker image to make sure that dependencies ca
 
 The tests **DO NOT GUARANTEE** that application-level logic/build works. We however **DO GUARANTEE** that the dependencies specified in the accompanying `./test/<TEST_CASE_ID>/package.json` can be installed with the Dockerfile `RUN` step in `./test/<TEST_CASE_ID>/.Dockerfile` with the extra required dependencies specified in `./test/<TEST_CASE_ID>/.extra-apk-dependencies`.
 
+#### Node [Development]
+- [BookShelf](https://github.com/bookshelf/bookshelf) : ORM library
+- [BusBoy](https://github.com/mscdex/busboy) : Form data parser middleware
+- [Chai](https://github.com/chaijs/chai) : Assertion library
+- [Compression](https://github.com/expressjs/compression) : GZIP middleware
+- [CORS](https://github.com/expressjs/cors) : CORS helper library
+- [EJS](https://github.com/tj/ejs) : Templating engine
+- [ESLint](https://github.com/eslint/eslint) : Static code analysis
+- [Express](https://github.com/expressjs/express) : Framework
+- [Istanbul](https://github.com/gotwarlost/istanbul) : Code coverage generator
+- [Jade](https://www.npmjs.com/package/jade) : Templating engine
+- [Jasmine](https://github.com/jasmine/jasmine)
+- [Helmet](https://github.com/helmetjs/helmet) : HTTP header protection
+- [Knex](https://github.com/tgriesser/knex) : Query builder
+- [Mocha](https://github.com/mochajs/mocha) : Test framework + runner
+- [Mongoose]
+- [Morgan](https://github.com/expressjs/morgan) : Request logger
+- [MySQL](https://github.com/mysqljs/mysql) : MySQL client
+- [MySQL2](https://github.com/sidorares/node-mysql2) : MySQL client
+- [PG](https://github.com/brianc/node-postgres) : PostgreSQL client
+- [Redis](https://github.com/NodeRedis/node_redis) : Redis client
+- [Rewire](https://github.com/jhnns/rewire) : Monkey-patching library
+- [Sinon](https://github.com/sinonjs/sinon) : Object mocking library
+- [Sequelize](https://github.com/sequelize/sequelize) : ORM library
+- [Supertest](https://github.com/visionmedia/supertest) : Request mocking library
+- [SQLite3](https://github.com/mapbox/node-sqlite3) : SQLite library
+- [Winston](https://github.com/winstonjs/winston) : Process logger
+
 #### React [Development]
-This covers common development and testing dependencies such as:
 
 - [Babel](https://github.com/babel/babel)
 - [Chai](https://github.com/chaijs/chai)
@@ -86,9 +113,7 @@ This covers common development and testing dependencies such as:
 - [SASS](https://github.com/sass/node-sass) (*via `node-sass`*)
 - [Should](https://github.com/shouldjs/should.js)
 - [Sinon](https://github.com/sinonjs/sinon)
-- [Webpack](https://github.com/webpack/webpack)
-- [Webpack Dev Middleware](https://github.com/webpack/webpack-dev-middleware)
-- [Webpack Hot Middleware](https://github.com/glenjamin/webpack-hot-middleware)
+- [Webpack](https://github.com/webpack/webpack) + [Webpack Dev Middleware](https://github.com/webpack/webpack-dev-middleware) + [Webpack Hot Middleware](https://github.com/glenjamin/webpack-hot-middleware)
 
 Tests are found in `./test/react-development`. If you wish to add on to this list, please fork this repo, add the packages you need tested and submit a merge request.
 
