@@ -1,0 +1,39 @@
+#!/bin/sh
+# extra scripts to test functionality after installation
+
+printf "\n== + == Container Info== + == \n";
+printf "System     : $(uname -s)\n";
+printf "  Release  : $(uname -r)\n";
+printf "  Version  : $(uname -v)\n";
+printf "  Name     : $(uname -n)\n";
+printf "User       : $(whoami)\n";
+printf "Node       : $(node --version) @ $(which node)\n";
+printf "NPM        : $(npm --v) @ $(which npm)\n";
+printf "Yarn       : $(yarn --version) @ $(which yarn)\n";
+printf "\$PWD       : $(pwd)\n";
+printf "\$PATH      : ${PATH}\n\n";
+printf "== + == Disk Info == + == \n";
+printf "$(df -h)\n";
+printf "$(df -i)\n\n";
+printf "== + == Installed APKs == + == \n";
+printf "$(apk info -vv | sort)\n\n";
+printf "== + == Cached APKs == + == \n";
+mkdir -p /var/cache/apk /var/lib/apk /etc/apk/cache;
+printf "/var/cache/apk : $(ls -lA /var/cache/apk)\n";
+printf "/var/lib/apk   : $(ls -lA /var/lib/apk)\n";
+printf "/etc/apk/cache : $(ls -lA /etc/apk/cache)\n\n";
+printf "== + == Yarn Cache Listing == + == \n";
+printf "$(yarn cache list)\n\n";
+printf "== + == NPM Cache Verify == + == \n";
+printf "$(npm cache verify)\n\n";
+printf "== + == System Users Info == + == \n":
+printf "$(cat /etc/passwd | sort)\n\n";
+printf "== + == Network Info == + == \n":
+printf "$(ifconfig)\n\n";
+printf "$(netstat -tupln)\n\n";
+printf "== + == Open Pipes Info == + == \n":
+printf "$(lsof -i)\n\n";
+printf "== + == System Binaries == + == \n":
+printf "$(ls -hl /usr/bin)\n\n";
+printf "== + == User Binaries == + == \n":
+printf "$(ls -hl /usr/local/bin)\n\n";

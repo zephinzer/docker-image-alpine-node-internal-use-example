@@ -21,7 +21,7 @@ notifications:
     - dev@joeir.net
 stages:
   - build
-  - test-react-development
+  - test
   - publish
 jobs:
   include: # <codename>-<node_version>, <build_version>-<codename>, latest-<codename>
@@ -40,25 +40,46 @@ jobs:
         - TAG_NAME=carbon
       script:
         - ./scripts/ci/build ${TAG_NAME}
-    - stage: test-react-development
+    - stage: test
       env:
         - FRAMEWORK=react-development
         - REMOTE_TAG=latest-argon
         - LOCAL_TAG=test_argon_react
       script:
         - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
-    - stage: test-react-development
+    - stage: test
       env:
         - FRAMEWORK=react-development
         - REMOTE_TAG=latest-boron
         - LOCAL_TAG=test_boron_react
       script:
         - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
-    - stage: test-react-development
+    - stage: test
       env:
         - FRAMEWORK=react-development
         - REMOTE_TAG=latest-carbon
         - LOCAL_TAG=test_carbon_react
+      script:
+        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
+    - stage: test
+      env:
+        - FRAMEWORK=node-development
+        - REMOTE_TAG=latest-argon
+        - LOCAL_TAG=test_argon_node
+      script:
+        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
+    - stage: test
+      env:
+        - FRAMEWORK=node-development
+        - REMOTE_TAG=latest-boron
+        - LOCAL_TAG=test_boron_node
+      script:
+        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
+    - stage: test
+      env:
+        - FRAMEWORK=node-development
+        - REMOTE_TAG=latest-carbon
+        - LOCAL_TAG=test_carbon_node
       script:
         - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
     - stage: publish
