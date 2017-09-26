@@ -3,6 +3,8 @@
 
 An open-sourced, minimal, tested, extensible, customisable and self-updating Node image.
 
+This image is a base image with Alpine Linux, Node and Yarn that has been designed for open-source with options to migrate over to a closed-source internal environment.
+
 ## TL;DR : Use It
 
 Use this in a Dockerfile (with `__TAG_ID__` set to a [Tag as listed on Docker Hub](https://hub.docker.com/r/zephinzer/alpine-node/tags/))
