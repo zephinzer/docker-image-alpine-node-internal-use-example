@@ -27,6 +27,7 @@ jobs:
     - stage: integrate
       script:
         - git checkout ${TRAVIS_COMMIT}
+        - git branch -avv
         - git fetch
         - git checkout public
         - git remote add source https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
