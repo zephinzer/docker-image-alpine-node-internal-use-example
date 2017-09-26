@@ -20,68 +20,15 @@ notifications:
   email:
     - dev@joeir.net
 stages:
-  - build
-  - test
-  - publish
+  - name: integrate
+    if: branch = master
 jobs:
-  include: # <codename>-<node_version>, <build_version>-<codename>, latest-<codename>
-    - stage: build
-      env:
-        - TAG_NAME=argon
+  include:
+    - stage: integrate
       script:
-        - ./scripts/ci/build ${TAG_NAME}
-    - stage: build
-      env:
-        - TAG_NAME=boron
-      script:
-        - ./scripts/ci/build ${TAG_NAME}
-    - stage: build
-      env:
-        - TAG_NAME=carbon
-      script:
-        - ./scripts/ci/build ${TAG_NAME}
-    - stage: test
-      env:
-        - FRAMEWORK=react-development
-        - REMOTE_TAG=latest-argon
-        - LOCAL_TAG=test_argon_react
-      script:
-        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
-    - stage: test
-      env:
-        - FRAMEWORK=react-development
-        - REMOTE_TAG=latest-boron
-        - LOCAL_TAG=test_boron_react
-      script:
-        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
-    - stage: test
-      env:
-        - FRAMEWORK=react-development
-        - REMOTE_TAG=latest-carbon
-        - LOCAL_TAG=test_carbon_react
-      script:
-        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
-    - stage: test
-      env:
-        - FRAMEWORK=node-development
-        - REMOTE_TAG=latest-argon
-        - LOCAL_TAG=test_argon_node
-      script:
-        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
-    - stage: test
-      env:
-        - FRAMEWORK=node-development
-        - REMOTE_TAG=latest-boron
-        - LOCAL_TAG=test_boron_node
-      script:
-        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
-    - stage: test
-      env:
-        - FRAMEWORK=node-development
-        - REMOTE_TAG=latest-carbon
-        - LOCAL_TAG=test_carbon_node
-      script:
-        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
-    - stage: publish
-      script:
-        - ./scripts/ci/publish
+        - git checkout ${TRAVIS_COMMIT}
+        - git fetch
+        - git checkout public
+        - git remote add source https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
+        - git fetch
+        - git merge source/master
