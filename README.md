@@ -1,10 +1,36 @@
-# Minimal Node + Yarn Docker Image
+# Alpine:Node Docker Image
 [![Build Status](https://travis-ci.org/zephinzer/docker-image-alpine-node.svg?branch=master)](https://travis-ci.org/zephinzer/docker-image-alpine-node)
 
-An open-sourced, minimal, tested, extensible and customisable Node LTS + Yarn Docker image for building upon.
+An open-sourced, minimal, tested, extensible, customisable and self-updating Node image.
 
-## TL;DR
+## TL;DR : Use It
 
+Use this in a Dockerfile (with `__TAG_ID__` set to a [Tag as listed on Docker Hub](https://hub.docker.com/r/zephinzer/alpine-node/tags/))
+
+```dockerfile
+FROM zephinzer/alpine-node:__TAG_ID__
+WORKDIR /app
+COPY . /app
+ENTRYPOINT ["./docker-entrypoint.sh"]
+```
+
+Or use this in a Docker-Compose (with `__TAG_ID__` set to a [Tag as listed on Docker Hub](https://hub.docker.com/r/zephinzer/alpine-node/tags/))
+
+```yaml
+version: "3"
+services:
+  alpine_node:
+    image: zephinzer/alpine-node:__TAG_ID__
+    working_dir: /app
+    entrypoint: "yarn --version"
+    volumes:
+      - ./:/app
+  ...
+```
+
+To customise a build, see the [Customising the Build section in Usage](#customising-the-build) for information.
+
+### Relevant Links
 The Docker Hub page can be found at: https://hub.docker.com/r/zephinzer/alpine-node/
 
 The Travis pipeline can be found at: https://travis-ci.org/zephinzer/docker-image-alpine-node
@@ -12,29 +38,6 @@ The Travis pipeline can be found at: https://travis-ci.org/zephinzer/docker-imag
 The example project for internal usage can be found at: https://github.com/zephinzer/docker-image-alpine-node-internal-use-example
 
 The Travis pipeline for internal usage can be found at: https://travis-ci.org/zephinzer/docker-image-alpine-node-internal-use-example
-
-Use this in a Dockerfile:
-
-```dockerfile
-FROM zephinzer/alpine-node:latest
-WORKDIR /app
-COPY . /app
-ENTRYPOINT ["yarn", "--version"]
-```
-
-Or use this in a Docker-Compose:
-
-```yaml
-version: "3"
-services:
-  alpine_node:
-    image: zephinzer/alpine-node:latest
-    working_dir: /app
-    entrypoint: "yarn --version"
-    volumes:
-      - ./:/app
-  ...
-```
 
 ## Guiding Principles
 Yet another `alpine-node` repository? Of course not. Here's what's different.
@@ -48,7 +51,7 @@ This image is designed to be minimal, and this is accomplished through using Lin
 Why minimal? Small sizes allow for easy logsitics during deployment and lean images reduce the risk of vulnerabilities.
 
 ### Tested
-This image is tested and proven to work with documented builds. See the `./test` directory to see the types of projects this base image can work with. Each sub-directory in `./test` includes a `.Dockerfile` which you can use as a template to pull from the desired tag, and a `.extra-apk-dependencies` which indicate what additional packages need to be installed for the build. The `package.json` specifies packages which will be included in the build, so if your desired package is there, it will work when you use this base image!
+This image is tested and proven to work with documented builds. See the `./test` directory to see the types of projects this base image can work with. Each sub-directory in `./test` includes a `.Dockerfile` which you can use as a template to pull from the desired tag, and a `.extra-apk-dependencies` which indicate what additional packages need to be installed for the build. The `package.json` specifies packages which will be included in the build, so if your desired package is there, it will work when you use this base image! See [Application Layer Frameworks/Libraries](#application-layer-frameworkslibraries) for a listing of NPM dependencies that will work with this image.
 
 ### Extensible
 Unlike other images, this image was designed so that you could run `apk add [EXTRA_APK_DEPENDENCIES]` from your own Dockerfile should things fail to build/run because of missing base dependencies. This image was also designed to be a base image for multiple other application images which we use internally, and will be updated and maintained to extend while maintaining backward compatibitlity.
@@ -63,30 +66,15 @@ Being designed for open-source for close-sourced usage, this image includes lots
 - `BORON_VERSION`: (defaults to `v6.11.3`)
 - `CARBON_VERSION`: (defaults to `v8.5.0`)
 
-For example, if you wanted to use `centos/centos:7` as your base image to build Node Carbon v8.4.0 and include Yarn v1.0.0,
+See the [Customising the Build section in Usage](#customising-the-build) for information on how to customise a build.
 
-- Clone this repository
-> `git clone git@github.com:zephinzer/docker-image-alpine-node.git`
-- Add a file named `BASE_IMAGE_SOURCE` in `./conf.d` with `centos/centos` as it's content
-> `printf "centos/centos" > ./conf.d/BASE_IMAGE_SOURCE`
-- Add a file named `BASE_IMAGE_TAG` in `./conf.d` with `7` as it's content
-> `printf "7" > ./conf.d/BASE_IMAGE_TAG`
-- Add a file named `CARBON_VERSION` in `./conf.d` with `v8.4.0` as it's content
-> `printf "v8.4.0" > ./conf.d/CARBON_VERSION`
-- Add a file named `YARN_VERSION` in `./conf.d` with `v1.0.0` as it's content.
-> `printf "v1.0.0" > ./conf.d/YARN_VERSION`
-- Create the build files:
-> `./scripts/build/setup`
-- Build the image:
-> `docker build -f carbon.Dockerfile -t my_carbon .`
-- Remove the build files:
-> `./scripts/build/teardown`
-- Find your image:
-> `docker images | grep my_carbon`
+### Self-Updating
+Other images require constant maintenance. We didn't want this repository to depend on us for updates, so we implemented methods to grab the latest versions of Node and Yarn to include in our daily build. See our build scripts in the `./scripts` for details. We currently grab the latest:
 
-This may be unnecessarily complicated, but we use this process so that we can open-source our logic, but use internally scanned and tested base images within our own products.
-
-See [Internal Use Example project](https://github.com/zephinzer/docker-image-alpine-node-internal-use-example) for an example of maintaining an internal repository.
+- Node Argon (4.x)
+- Node Boron (6.x)
+- Node Carbon (8.x)
+- Yarn
 
 ## So... What's Supported
 
@@ -112,11 +100,11 @@ The tests **DO NOT GUARANTEE** that application-level logic/build works. We howe
 - [Express](https://github.com/expressjs/express) : Framework
 - [Istanbul](https://github.com/gotwarlost/istanbul) : Code coverage generator
 - [Jade](https://www.npmjs.com/package/jade) : Templating engine
-- [Jasmine](https://github.com/jasmine/jasmine)
+- [Jasmine](https://github.com/jasmine/jasmine) : Test framework
 - [Helmet](https://github.com/helmetjs/helmet) : HTTP header protection
 - [Knex](https://github.com/tgriesser/knex) : Query builder
 - [Mocha](https://github.com/mochajs/mocha) : Test framework + runner
-- [Mongoose]
+- [Mongoose](https://github.com/Automattic/mongoose) : MongoDB client
 - [Morgan](https://github.com/expressjs/morgan) : Request logger
 - [MySQL](https://github.com/mysqljs/mysql) : MySQL client
 - [MySQL2](https://github.com/sidorares/node-mysql2) : MySQL client
@@ -131,49 +119,77 @@ The tests **DO NOT GUARANTEE** that application-level logic/build works. We howe
 
 #### React [Development]
 
-- [Babel](https://github.com/babel/babel)
-- [Chai](https://github.com/chaijs/chai)
-- [Enzyme](https://github.com/airbnb/enzyme)
-- [ESLint](https://github.com/eslint/eslint)
-- [Jasmine](https://github.com/jasmine/jasmine)
-- [Jest](https://github.com/facebook/jest)
-- [Karma](https://github.com/karma-runner/karma)
-- [Mocha](https://github.com/mochajs/mocha)
-- [NSP](https://github.com/nodesecurity/nsp)
-- [PhantomJS](https://github.com/Medium/phantomjs) (*via `phantomjs-prebuilt`*)
-- [React Hot Loader](https://github.com/gaearon/react-hot-loader)
-- [Rewire](https://github.com/speedskater/babel-plugin-rewire) (*via `babel-plugin-rewire`*)
-- [SASS](https://github.com/sass/node-sass) (*via `node-sass`*)
-- [Should](https://github.com/shouldjs/should.js)
-- [Sinon](https://github.com/sinonjs/sinon)
-- [Webpack](https://github.com/webpack/webpack) + [Webpack Dev Middleware](https://github.com/webpack/webpack-dev-middleware) + [Webpack Hot Middleware](https://github.com/glenjamin/webpack-hot-middleware)
+- [Babel](https://github.com/babel/babel) : ECMAScript transpiler
+- [Chai](https://github.com/chaijs/chai) : Assertion library
+- [Enzyme](https://github.com/airbnb/enzyme) : React component test rendering library
+- [ESLint](https://github.com/eslint/eslint) : Static code analysis
+- [Jasmine](https://github.com/jasmine/jasmine) : Test framework
+- [Jest](https://github.com/facebook/jest) : Test framework + runner
+- [Karma](https://github.com/karma-runner/karma) : Test runner
+- [Mocha](https://github.com/mochajs/mocha) : Test framework + runner
+- [NSP](https://github.com/nodesecurity/nsp) : Node modules vulnerability scanner
+- [PhantomJS](https://github.com/Medium/phantomjs) (*via `phantomjs-prebuilt`*) : Headless browser
+- [React Hot Loader](https://github.com/gaearon/react-hot-loader) : Hot reloading middelware
+- [Rewire](https://github.com/speedskater/babel-plugin-rewire) (*via `babel-plugin-rewire`*) : Monkey-patching library
+- [SASS](https://github.com/sass/node-sass) (*via `node-sass`*) : SASS functionality provider
+- [Should](https://github.com/shouldjs/should.js) : Assertion library
+- [Sinon](https://github.com/sinonjs/sinon) : Object mocking library
+- [Webpack](https://github.com/webpack/webpack) : JavaScript bundler
+- [Webpack Dev Middleware](https://github.com/webpack/webpack-dev-middleware) : Development middleware for React
+- [Webpack Hot Middleware](https://github.com/glenjamin/webpack-hot-middleware) : Hot-reloading middleware for React
 
 Tests are found in `./test/react-development`. If you wish to add on to this list, please fork this repo, add the packages you need tested and submit a merge request.
 
 ## Usage
 
-### In a Dockerfile
-Pull the image from DockerHub specifying the approrpriate version:
+### Choosing the Tag
+
+Everytime we publish a new image tag, we include 3 versions:
+
+- `NODE_VERSION`
+- `node-NODE_VERSION_yarn-YARN_VERSION`
+- `latest-NODE_CODENAME`
+
+The highest available version is also published with `latest`.
+
+The `NODE_VERSION` and `latest-NODE_CODENAME` tags will always contain the latest Yarn as it is overwritten as new Node/Yarn versions come out.
+
+Should you need control over the Node and Yarn version, use the `node-NODE_VERSION_yarn-YARN_VERSION` tag type as that will ensure the version of both Node and Yarn.
+
+### As a Base Image via Dockerfile
 
 ```dockerfile
-FROM zephinzer/alpine-node:vx.y.z
-...
+FROM zephinzer/alpine-node:__TAG_ID__
+# install system dependencies required for build and remove cached stuff
+RUN mkdir -p /var/cache/apk && \
+    apk update && \
+    apk upgrade && \
+    apk add --no-cache ${EXTRA_APK_DEPENDENCIES} && \
+    yarn install && \
+    yarn cache clean && \
+    apk del ${EXTRA_APK_DEPENDENCIES} && \
+    rm -rf /var/cache/apk/*
+COPY . /app
+ENTRYPOINT ["./docker-entrypoint.sh"]
 ```
 
-For a specific Node and Yarn version, use:
+The `__TAG_ID__` can be found from the [Tags section in Docker Hub](https://hub.docker.com/r/zephinzer/alpine-node/tags/).
+
+You can find documented `EXTRA_APK_DEPENDENCIES` within our tests which will indicate what other APK dependencies you will need in order to build your NPM dependencies.
+
+### As a Container Image via Docker-Compose
 
 ```dockerfile
-FROM zephinzer/alpine-node:node-vX.Y.Z_yarn-vA.B.C
-...
-```
-
-Where `X.Y.Z` is the semver version of Node and `A.B.C` is the semver version of Yarn. Check the [Tags in Docker Hub Registry](https://hub.docker.com/r/zephinzer/alpine-node/tags/) to see what versions are available.
-
-Or just grab the latest build with:
-
-```dockerfile
-FROM zephinzer/alpine-node:latest
-...
+version: "3"
+services:
+  app:
+    image: zephinzer/alpine-node:latest
+    working_dir: /app
+    entrypoint: "/app/docker-entrypoint.sh"
+    volumes:
+      - ./:/app
+    ...
+  ...
 ```
 
 ### From Repository Release
@@ -191,6 +207,29 @@ These will create `Dockerfile`s for `argon` (Node 4.x LTS), `boron` (Node 6.x LT
 # docker build .
 ```
 
+### Customising the Build
+For example, if you wanted to use `centos/centos:7` as your base image to build Node Carbon v8.4.0 and include Yarn v1.0.0,
+
+- Clone this repository or download a release from the [Releases Section](https://github.com/zephinzer/docker-image-alpine-node/releases)
+    - `git clone git@github.com:zephinzer/docker-image-alpine-node.git`
+- Add the relevant files to `./conf.d` to configure the build
+    - `printf "centos/centos" > ./conf.d/BASE_IMAGE_SOURCE`
+    - `printf "7" > ./conf.d/BASE_IMAGE_TAG`
+    - `printf "v8.4.0" > ./conf.d/CARBON_VERSION`
+    - `printf "v1.0.0" > ./conf.d/YARN_VERSION`
+- Create the build files:
+    - `./scripts/build/setup`
+- Build the image:
+    - `docker build -f carbon.Dockerfile -t my_carbon .`
+- Remove the build files:
+    - `./scripts/build/teardown`
+- Find your image:
+    - `docker images | grep my_carbon`
+
+This may be unnecessarily complicated, but we use this process so that we can open-source our logic, but use internally scanned and tested base images within our own products.
+
+See [Internal Use Example project](https://github.com/zephinzer/docker-image-alpine-node-internal-use-example) for an example of maintaining an internal repository.
+
 ## Contribution/Maintenance/Release Cycle
 
 ### Contribution of Tests
@@ -205,6 +244,8 @@ Currently, automated retrieval and building of MINOR and PATCH versions are supp
   - add a new job per `build` stage that uses the relevant codename
 - `./scripts/build/setup` : search for `[[MAINTENANCE]]` tags and add the new codename. Current codenames begin each section with `## <codename> (Y.x)` where Y is the major version number and `<codename>` is one of `argon`, `boron` and `carbon`.
 
+The scripts used to grab the latest version of Node and Yarn can also be found in `./scripts/build/setup` and may break if Node/Yarn decides to change how they list their versions and releases. Fix it by modifying the version retrieval logic.
+
 ### Release Cycle
 The Travis CI script is set to run **every day at least once**, ensuring that latest versions will always be built. Image versions available are from time of first publication (24th September 2017) and includes all versions **after** the following:
 
@@ -217,4 +258,7 @@ The Travis CI script is set to run **every day at least once**, ensuring that la
 This repository contains a [semver](http://semver.org/) versioning system where every successful CI run by Travis increases the PATCH version. There is no need to do anything. Breaking changes will be handled by the maintainers who will update the MAJOR and MINOR versions.
 
 ### Force Rebuilding
-Occassionally because of security vulnerabilities, it is necessary to rebuild previous containers because the build methodology is broken. For such cases, include a `[force rebuild]` string inside the commit message to force the rebuild of the latest versions.
+Occassionally because of security vulnerabilities, it is necessary to rebuild previous containers because the build methodology is broken. For such cases, include a `[force build]` string inside the commit message to force the rebuild of the latest versions.
+
+## Cheers
+If you feel this is awesome, give it a star to show your support!
