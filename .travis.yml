@@ -26,7 +26,7 @@ jobs:
   include:
     - stage: integrate
       script:
-        - git checkout ${TRAVIS_COMMIT}
+        - git checkout master
         - git branch -avv
         - git fetch
         - git checkout public
