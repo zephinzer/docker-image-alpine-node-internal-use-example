@@ -18,7 +18,8 @@ We have here a repository that is a mirror from the main repository that builds 
 
 ## Methodology
 
-### Git Magic
+### Git for code management
+
 1. Checkout the `public` branch in internal repository
 2. Add source repository (in this case, it's https://github.com/zephinzer/docker-image-alpine-node.git) as a new remote
 3. Pull from the source repository into the `public` branch
@@ -31,5 +32,5 @@ We have here a repository that is a mirror from the main repository that builds 
 
 A Travis CI version of the methodology has been implemented for this example repository and can be found in the `.travis.yml` file.
 
-### Travis Magic
+### Travis CI for application maintenance
 To allow for full automation of open-source to internal repository integration, we set a Cron job in Travis CI to run this build every day. The Travis CI pipeline can be found at: https://travis-ci.org/zephinzer/docker-image-alpine-node-internal-use-example
