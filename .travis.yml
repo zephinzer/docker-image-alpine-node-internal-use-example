@@ -29,6 +29,7 @@ jobs:
         - git checkout master
         - git fetch origin
         - git branch -avv
+        - git remote -v
         - git checkout -b public origin/public
         - git pull origin public
         - git remote add source https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
