@@ -38,3 +38,12 @@ jobs:
         - git pull source master
         - UPDATED_HASH=$(git log -n 1 --pretty=format:"%H")
         - if [[ $UPDATED_HASH != $CURRENT_HASH ]]; then git push origin public; fi;
+        - git remote remove source
+        - CURRENT_DATE_STRING=$(date +'%Y%m%d%H%M%S')
+        - git checkout -b hybrid_source_${CURRENT_DATE_STRING}
+        - git rm --cached .travis.yml
+        - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')"
+        - git checkout master
+        - git merge hybrid_source
+        - git push origin master
+        - git branch -D hybrid_source_${CURRENT_DATE_STRING}
