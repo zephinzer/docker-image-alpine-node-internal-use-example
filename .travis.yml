@@ -27,8 +27,8 @@ jobs:
     - stage: integrate
       script:
         - git checkout master
-        - git branch -avv
         - git fetch
+        - git branch -avv
         - git checkout public
         - git remote add source https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
         - git fetch
