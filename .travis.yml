@@ -31,7 +31,9 @@ jobs:
         - CURRENT_DATE_STRING=$(date +'%Y%m%d%H%M%S')
         - git checkout -b hybrid_source_${CURRENT_DATE_STRING}
         - git update-index --skip-worktree .travis.yml
-        - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')" --allow-empty
+        - COMMIT_MESSAGE="Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')"
+        - if [[ $UPDATED_HASH != $CURRENT_HASH ]]; then COMMIT_MESSAGE="${COMMIT_MESSAGE} - no changes so [skip ci]" fi;
+        - git commit -m ${COMMIT_MESSAGE} --allow-empty
         - git checkout master
         - git merge hybrid_source_${CURRENT_DATE_STRING}
         - git push origin master
