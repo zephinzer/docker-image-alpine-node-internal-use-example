@@ -5,6 +5,7 @@ LABEL maintainer="dev@joeir.net" \
 ENV INSTALL_PATH=/tmp
 ENV APK_TO_INSTALL="bash curl gcc g++ make python linux-headers binutils-gold libstdc++ gnupg"
 ENV APK_TO_REMOVE="bash curl gcc g++ make python binutils-gold gnupg"
+ENV APK_DEFAULT_DEPENDENCIES_FOR_YARN_BUILD="python make g++"
 ENV APPLICATION_WORKING_DIRECTORY=/app
 ENV NODE_VERSION=__NODE_VERSION__
 ENV NODE_URL=https://nodejs.org/dist/${NODE_VERSION}/node-${NODE_VERSION}.tar.xz
@@ -34,6 +35,8 @@ ENV YARN_INSTALL_PATH=${INSTALL_PATH}/yarn.tar.gz
 ENV YARN_INSTALL_GPG_PATH=${YARN_INSTALL_PATH}.asc
 ENV YARN_INSTALL_DIR=${INSTALL_PATH}/yarn-${YARN_VERSION}
 ENV YARN_INSTALLED_PATH=/usr/local/share/yarn/
+ENV YARN_PRE_INSTALL=/usr/local/bin/yarn_pre_install
+ENV YARN_POST_INSTALL=/usr/local/bin/yarn_post_install
 ENV FONT_RESET="\033[0m"
 ENV FONT_BOLD="\033[1m"
 ENV FONT_DIM="\033[2m"
@@ -97,6 +100,27 @@ RUN printf "${FONT_BOLD}${FONT_GREEN} \n\
     ___________________ \n\
     END:</install-node> \n\
     ^^^^^^^^^^^^^^^^^^^ \n\
+    ${FONT_RESET}${FONT_DIM}\n" && \
+    printf "${FONT_BOLD}${FONT_GREEN} \n\
+    _________________________________ \n\
+    BEGIN:<setup-convenience-scripts> \n\
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n\
+    ${FONT_RESET}${FONT_DIM}\n" && \
+    touch ${YARN_PRE_INSTALL} && \
+    echo "#!/bin/sh" > ${YARN_PRE_INSTALL} && \
+    echo "apk update && apk upgrade" >> ${YARN_PRE_INSTALL} && \
+    echo "apk add --no-cache ${APK_DEFAULT_DEPENDENCIES_FOR_YARN_BUILD};" >> ${YARN_PRE_INSTALL} && \
+    chmod +x ${YARN_PRE_INSTALL} && \
+    touch ${YARN_POST_INSTALL} && \
+    echo "#!/bin/sh" > ${YARN_POST_INSTALL} && \
+    echo "yarn cache clean;" >> ${YARN_POST_INSTALL} && \
+    echo "apk del ${APK_DEFAULT_DEPENDENCIES_FOR_YARN_BUILD};" >> ${YARN_POST_INSTALL} && \
+    echo "rm -rf ${PATHS_TO_REMOVE};" >> ${YARN_POST_INSTALL} && \
+    chmod +x ${YARN_POST_INSTALL} && \
+    printf "${FONT_BOLD}${FONT_GREEN} \n\
+    _______________________________ \n\
+    END:<setup-convenience-scripts> \n\
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ \n\
     ${FONT_RESET}${FONT_DIM}\n" && \
     printf "${FONT_BOLD}${FONT_GREEN} \n\
     ________________ \n\
