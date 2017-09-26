@@ -3,7 +3,38 @@
 
 An open-sourced, minimal, tested, extensible and customisable Node LTS + Yarn Docker image for building upon.
 
-Check out the Docker Hub page at: https://hub.docker.com/r/zephinzer/alpine-node/
+## TL;DR
+
+The Docker Hub page can be found at: https://hub.docker.com/r/zephinzer/alpine-node/
+
+The Travis pipeline can be found at: https://travis-ci.org/zephinzer/docker-image-alpine-node
+
+The example project for internal usage can be found at: https://github.com/zephinzer/docker-image-alpine-node-internal-use-example
+
+The Travis pipeline for internal usage can be found at: https://travis-ci.org/zephinzer/docker-image-alpine-node-internal-use-example
+
+Use this in a Dockerfile:
+
+```dockerfile
+FROM zephinzer/alpine-node:latest
+WORKDIR /app
+COPY . /app
+ENTRYPOINT ["yarn", "--version"]
+```
+
+Or use this in a Docker-Compose:
+
+```yaml
+version: "3"
+services:
+  alpine_node:
+    image: zephinzer/alpine-node:latest
+    working_dir: /app
+    entrypoint: "yarn --version"
+    volumes:
+      - ./:/app
+  ...
+```
 
 ## Guiding Principles
 Yet another `alpine-node` repository? Of course not. Here's what's different.
@@ -53,7 +84,9 @@ For example, if you wanted to use `centos/centos:7` as your base image to build 
 - Find your image:
 > `docker images | grep my_carbon`
 
-This may be unnecessarily complicated, but we use this process so that we can open-source our logic, but use internally scanned and tested base images within our own products. See the project at https://github.com/zephinzer/docker-image-alpine-node-internal-use-example for an example of maintaining an internal repository.
+This may be unnecessarily complicated, but we use this process so that we can open-source our logic, but use internally scanned and tested base images within our own products.
+
+See [Internal Use Example project](https://github.com/zephinzer/docker-image-alpine-node-internal-use-example) for an example of maintaining an internal repository.
 
 ## So... What's Supported
 
