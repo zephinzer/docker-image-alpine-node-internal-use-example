@@ -26,6 +26,7 @@ jobs:
   include:
     - stage: integrate
       script:
+        - git config --get remote.origin.fetch
         - git checkout master
         - git fetch origin
         - git branch -avv
