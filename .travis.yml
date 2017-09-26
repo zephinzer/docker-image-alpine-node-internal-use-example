@@ -27,7 +27,7 @@ jobs:
     - stage: integrate
       script:
         - git checkout master
-        - git fetch origin public
+        - git fetch origin
         - git branch -avv
         - git checkout -b public origin/public
         - git pull origin public
