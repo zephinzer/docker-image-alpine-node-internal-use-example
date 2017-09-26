@@ -30,8 +30,7 @@ jobs:
         - git remote remove source
         - CURRENT_DATE_STRING=$(date +'%Y%m%d%H%M%S')
         - git checkout -b hybrid_source_${CURRENT_DATE_STRING}
-        - git rm --cached .travis.yml
-        - rm .travis.yml
+        - git update-index --skip-worktree .travis.yml
         - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')"
         - git checkout master
         - git merge hybrid_source_${CURRENT_DATE_STRING}
