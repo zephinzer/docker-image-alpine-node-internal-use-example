@@ -40,6 +40,7 @@ jobs:
         - TAG_NAME=carbon
       script:
         - ./scripts/ci/build ${TAG_NAME}
+    ## react-development
     - stage: test
       env:
         - FRAMEWORK=react-development
@@ -61,6 +62,7 @@ jobs:
         - LOCAL_TAG=test_carbon_react
       script:
         - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
+    ## node-development
     - stage: test
       env:
         - FRAMEWORK=node-development
@@ -80,6 +82,28 @@ jobs:
         - FRAMEWORK=node-development
         - REMOTE_TAG=latest-carbon
         - LOCAL_TAG=test_carbon_node
+      script:
+        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
+    ## gitbook
+    - stage: test
+      env:
+        - FRAMEWORK=gitbook
+        - REMOTE_TAG=latest-argon
+        - LOCAL_TAG=test_argon_gitbook
+      script:
+        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
+    - stage: test
+      env:
+        - FRAMEWORK=gitbook
+        - REMOTE_TAG=latest-boron
+        - LOCAL_TAG=test_boron_gitbook
+      script:
+        - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
+    - stage: test
+      env:
+        - FRAMEWORK=gitbook
+        - REMOTE_TAG=latest-carbon
+        - LOCAL_TAG=test_carbon_gitbook
       script:
         - ./scripts/ci/test ${FRAMEWORK} ${REMOTE_TAG} ${LOCAL_TAG}
     - stage: publish
