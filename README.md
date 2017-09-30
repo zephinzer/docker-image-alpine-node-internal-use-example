@@ -61,12 +61,14 @@ Unlike other images, this image was designed so that you could run `apk add [EXT
 ### Customisable
 Being designed for open-source for close-sourced usage, this image includes lots of templating which can be configured according to your needs. This is achieved through the `./conf.d` folder where you can specify the following variables as filenames with their values being the file's content to use when building this image from it's Dockerfile:
 
+- `DOCKER_REGISTRY_URL`: (defaults to `https://index.docker.io`)
+- `REPOSITORY_NAME`: (defaults to `zephinzer/alpine-node`)
 - `BASE_IMAGE_SOURCE`: (defaults to `iron/base`)
 - `BASE_IMAGE_TAG`: (defaults to `3.4`)
-- `YARN_VERSION`: (defaults to `v1.0.2`)
-- `ARGON_VERSION`: (defaults to `v4.8.4`)
-- `BORON_VERSION`: (defaults to `v6.11.3`)
-- `CARBON_VERSION`: (defaults to `v8.5.0`)
+- `YARN_VERSION`: (defaults to latest)
+- `ARGON_VERSION`: (defaults to latest-`4.x`)
+- `BORON_VERSION`: (defaults to latest-`6.x`)
+- `CARBON_VERSION`: (defaults to latest-`8.x`)
 
 See the [Customising the Build section in Usage](#customising-the-build) for information on how to customise a build.
 
@@ -257,10 +259,10 @@ The Travis CI script is set to run **every day at least once**, ensuring that la
 - Yarn 1.0.2
 
 ### Release Versioning
-This repository contains a [semver](http://semver.org/) versioning system where every successful CI run by Travis increases the PATCH version. There is no need to do anything. Breaking changes will be handled by the maintainers who will update the MAJOR and MINOR versions. To see where minor/major releases were made, search for commits with `[minor version bump]` and `[major version bump]` for minor and major versions respectively.
+This repository contains a [semver](http://semver.org/) versioning system where every successful CI run by Travis increases the PATCH version. There is no need to do anything. Breaking changes will be handled by the maintainers who will update the MAJOR version. MINOR version upgrades will automatically be made when `[force build]` is specified.
 
 ### Force Rebuilding
-Occassionally because of security vulnerabilities, it is necessary to rebuild previous containers because the build methodology is broken. For such cases, include a `[force build]` string inside the commit message to force the rebuild of the latest versions.
+Occassionally because of security vulnerabilities, it is necessary to rebuild previous containers because the build methodology is broken. For such cases, include a `[force build]` string inside the commit message to force the rebuild of the latest versions. Force rebuilding will cause a minor version bump.
 
 ## Cheers
 If you feel this is awesome, give it a star to show your support!

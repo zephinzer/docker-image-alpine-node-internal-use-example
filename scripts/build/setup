@@ -6,9 +6,17 @@ SETUP_DIR=${PROJ_DIR}/.setup;
 UTILS_DIR=${CURR_DIR}/../utils;
 mkdir -p ${SETUP_DIR};
 
-# output versions
+# output build versions
 BUILD_VERSION=$(${UTILS_DIR}/build_version);
 printf "BUILD_VERSION:          $BUILD_VERSION\n";
+
+# output docker registry url
+DOCKER_REGISTRY_URL=$(${UTILS_DIR}/docker_registry_url);
+printf "DOCKER_REGISTRY_URL:    $DOCKER_REGISTRY_URL\n";
+
+# output repository name
+REPOSITORY_NAME=$(${UTILS_DIR}/repository_name);
+printf "REPOSITORY_NAME:        $REPOSITORY_NAME\n";
 
 # set base image versions [[MAINTENANCE]]
 ## base source

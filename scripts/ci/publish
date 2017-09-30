@@ -3,10 +3,8 @@ CURR_DIR=$(dirname $0);
 if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
   git checkout ${TRAVIS_BRANCH};
   COMMIT_MESSAGE=$(git log -n 1 --pretty=format:"%B");
-  if [[ $COMMIT_MESSAGE == *"[minor version bump]"* ]]; then
+  if [[ $COMMIT_MESSAGE == *"[force build]"* ]]; then
     ${CURR_DIR}/../versioning/iterate minor -i -q;
-  elif [[ $COMMIT_MESSAGE == *"[major version bump]"* ]]; then
-    ${CURR_DIR}/../versioning/iterate major -i -q;
   else
     ${CURR_DIR}/../versioning/iterate -i -q;
   fi;
