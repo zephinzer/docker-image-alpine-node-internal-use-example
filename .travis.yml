@@ -40,9 +40,7 @@ jobs:
         - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')" --allow-empty
         # 8
         - git checkout master
-        - git merge hybrid_source_${CURRENT_DATE_STRING} --no-commit
-        - git checkout --f .travis.yml
-        - git checkout --f README.md
+        - git merge hybrid_source_${CURRENT_DATE_STRING} --no-commit && git checkout --ours .travis.yml && git checkout --ours README.md
         - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')"
         # 9
         - if [[ $UPDATED_HASH != $CURRENT_HASH ]]; then git push origin master; fi;
