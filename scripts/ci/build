@@ -1,28 +1,41 @@
 #!/bin/bash
-TAG_NAME=$1;
+# script-wide constants
 CURR_DIR=$(dirname $0);
 PROJ_DIR=${CURR_DIR}/../..;
 SETUP_DIR=${PROJ_DIR}/.setup;
+UTILS_DIR=${CURR_DIR}/../utils;
+
+# arguments processing
+TAG_NAME=$1;
 
 ${CURR_DIR}/../build/setup;
-NODE_VERSION=$(cat ${SETUP_DIR}/${TAG_NAME}.Version);
+__setup_directory_exists=$(stat ${SETUP_DIR} &>/dev/null);
 if [[ $? != "0" ]]; then
-  printf "[ERROR] ${SETUP_DIR}/yarn.Version could not be found.\n";
+  printf "\n\033[31m[ERR] The \033[0m\n\n";
   exit 1;
 fi;
+
+NODE_VERSION=$(cat ${SETUP_DIR}/${TAG_NAME}.Version);
+if [[ $? != "0" ]]; then
+  printf "[ERROR] ${SETUP_DIR}/${TAG_NAME}.Version could not be found.\n";
+  exit 1;
+fi;
+
 YARN_VERSION="$(cat ${SETUP_DIR}/yarn.Version)";
 if [[ $? != "0" ]]; then
   printf "[ERROR] ${SETUP_DIR}/yarn.Version could not be found.\n";
   exit 1;
 fi;
+
 EXISTENCE_TAG="node-${NODE_VERSION}_yarn-${YARN_VERSION}";
 EXISTENCE_CHECK=$(curl --silent -f -lSL https://index.docker.io/v1/repositories/zephinzer/alpine-node/tags/${EXISTENCE_TAG});
-if [[ $? != "0" ]] || [[ $TRAVIS_COMMIT_MESSAGE == *"[force build]"* ]]; then
+COMMIT_MESSAGE=$(git log -n 1 --pretty=format:"%B");
+if [[ $? != "0" ]] || [[ $COMMIT_MESSAGE == *"[force build]"* ]]; then
   printf "[BUILDING] TAG:${EXISTENCE_TAG} was NOT found. Building...\n";
   docker build -t next -f ${TAG_NAME}.Dockerfile .;
   if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
     printf "[PUBLISHING] TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST, pushing latest ${TAG_NAME} to Docker Hub...\n";
-    docker login -u $DHUSER -p $DHPASS;
+    docker login -u  $DHUSER -p $DHPASS;
     docker tag next  ${DOCKER_REPO}:${NODE_VERSION};
     docker push      ${DOCKER_REPO}:${NODE_VERSION};
     docker tag next  ${DOCKER_REPO}:${EXISTENCE_TAG};

@@ -1,0 +1,28 @@
+#!/bin/bash
+## template
+CURR_DIR=$(dirname $0);
+PROJ_DIR=${CURR_DIR}/../..;
+SETUP_DIR=${PROJ_DIR}/.setup;
+CONF_DIR=${PROJ_DIR}/conf.d;
+
+## constants
+CONF_FILE_PATH="${CONF_DIR}/BORON_VERSION";
+LATEST_URL="https://nodejs.org/download/release/latest-v6.x/";
+OUTPUT_FILE="${SETUP_DIR}/boron.Version";
+
+## processing
+BORON_VERSION='v6.11.3';
+__exists=$(stat ${CONF_FILE_PATH} &>/dev/null);
+if [[ $? = "0" ]]; then
+  BORON_VERSION=$(cat ${CONF_FILE_PATH});
+else
+  BORON_VERSION="v$(curl -sSlf ${LATEST_URL} | grep '>node-v' | tail -n 1 | cut -f 2 -d "\"" | cut -f 2 -d "v" | cut -f 1,2,3 -d ".")";
+  if [[ $? != "0" ]]; then
+    printf "\n\033[31m[ERR] BORON_VERSION could not be retrieved. Error accessing ${LATEST_URL}.\033[0m\n\n";
+    exit 1;
+  fi;
+fi;
+
+## output
+printf "$BORON_VERSION" > "${OUTPUT_FILE}";
+printf "${BORON_VERSION}";

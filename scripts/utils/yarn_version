@@ -1,0 +1,28 @@
+#!/bin/bash
+## template
+CURR_DIR=$(dirname $0);
+PROJ_DIR=${CURR_DIR}/../..;
+SETUP_DIR=${PROJ_DIR}/.setup;
+CONF_DIR=${PROJ_DIR}/conf.d;
+
+## constants
+CONF_FILE_PATH="${CONF_DIR}/YARN_VERSION";
+LATEST_URL="https://yarnpkg.com/latest.tar.gz";
+OUTPUT_FILE="${SETUP_DIR}/yarn.Version";
+
+## processing
+YARN_VERSION='v1.1.0';
+__exists=$(stat ${CONF_FILE_PATH} &>/dev/null);
+if [[ $? = "0" ]]; then
+  YARN_VERSION=$(cat ${CONF_FILE_PATH});
+else
+  YARN_VERSION=$(curl -sSlf ${LATEST_URL} | cut -f 8 -d "/");
+  if [[ $? != "0" ]]; then
+    printf "\n\033[31m[ERR] YARN_VERSION could not be retrieved. Error accessing ${LATEST_URL}.\033[0m\n\n";
+    exit 1;
+  fi;
+fi;
+
+## output
+printf "$YARN_VERSION" > "${OUTPUT_FILE}";
+printf "${YARN_VERSION}";
