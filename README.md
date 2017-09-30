@@ -257,7 +257,7 @@ The Travis CI script is set to run **every day at least once**, ensuring that la
 - Yarn 1.0.2
 
 ### Release Versioning
-This repository contains a [semver](http://semver.org/) versioning system where every successful CI run by Travis increases the PATCH version. There is no need to do anything. Breaking changes will be handled by the maintainers who will update the MAJOR and MINOR versions.
+This repository contains a [semver](http://semver.org/) versioning system where every successful CI run by Travis increases the PATCH version. There is no need to do anything. Breaking changes will be handled by the maintainers who will update the MAJOR and MINOR versions. To see where minor/major releases were made, search for commits with `[minor version bump]` and `[major version bump]` for minor and major versions respectively.
 
 ### Force Rebuilding
 Occassionally because of security vulnerabilities, it is necessary to rebuild previous containers because the build methodology is broken. For such cases, include a `[force build]` string inside the commit message to force the rebuild of the latest versions.
