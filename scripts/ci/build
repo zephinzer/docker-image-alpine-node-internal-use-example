@@ -46,9 +46,9 @@ EXISTENCE_CHECK=$(curl -sSlLf ${DOCKER_REGISTRY_URL}/v1/repositories/${REPOSITOR
 COMMIT_MESSAGE=$(git log -n 1 --pretty=format:"%B");
 if [[ ${IS_PULL_REQUEST} = "" ]]; then
   if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
-    IS_PULL_REQUEST='true';
-  else
     IS_PULL_REQUEST='false';
+  else
+    IS_PULL_REQUEST='true';
   fi;
 fi;
 if [[ $? != "0" ]] || [[ $COMMIT_MESSAGE == *"[force build]"* ]]; then
