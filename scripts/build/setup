@@ -8,34 +8,34 @@ mkdir -p ${SETUP_DIR};
 
 # output build versions
 BUILD_VERSION=$(${UTILS_DIR}/build_version);
-printf "BUILD_VERSION:          $BUILD_VERSION\n";
+printf "BUILD_VERSION             : ${BUILD_VERSION}\n";
 
 # output docker registry url
 DOCKER_REGISTRY_URL=$(${UTILS_DIR}/docker_registry_url);
-printf "DOCKER_REGISTRY_URL:    $DOCKER_REGISTRY_URL\n";
+printf "DOCKER_REGISTRY_URL       : ${DOCKER_REGISTRY_URL}\n";
 
 # output repository name
 REPOSITORY_NAME=$(${UTILS_DIR}/repository_name 'zephinzer/alpine-node');
-printf "REPOSITORY_NAME:        $REPOSITORY_NAME\n";
+printf "REPOSITORY_NAME           : ${REPOSITORY_NAME}\n";
 
 # set base image versions [[MAINTENANCE]]
 ## base source
 BASE_IMAGE_NAME=$(${UTILS_DIR}/base_image_name 'iron/base');
 BASE_IMAGE_NAME_KEY="__BASE_IMAGE_NAME__";
 BASE_IMAGE_NAME_SED="s|${BASE_IMAGE_NAME_KEY}|${BASE_IMAGE_NAME}|g";
-printf "BASE_IMAGE_NAME:      $BASE_IMAGE_NAME\n";
+printf "BASE_IMAGE_NAME           : ${BASE_IMAGE_NAME}\n";
 
 ## base tag
 BASE_IMAGE_TAG=$(${UTILS_DIR}/base_image_tag '3.4');
 BASE_IMAGE_TAG_KEY="__BASE_IMAGE_TAG__";
 BASE_IMAGE_TAG_SED="s|${BASE_IMAGE_TAG_KEY}|${BASE_IMAGE_TAG}|g";
-printf "BASE_IMAGE_TAG:         $BASE_IMAGE_TAG\n";
+printf "BASE_IMAGE_TAG            : ${BASE_IMAGE_TAG}\n";
 
 ## yarn
 YARN_VERSION=$(${UTILS_DIR}/yarn_version);
 YARN_VERSION_KEY="__YARN_VERSION__";
 YARN_VERSION_SED="s|${YARN_VERSION_KEY}|${YARN_VERSION}|g";
-printf "YARN_VERSION:           ${YARN_VERSION}\n";
+printf "YARN_VERSION              : ${YARN_VERSION}\n";
 
 # create base dockerfile
 TEMPLATE_DOCKERFILE="${PROJ_DIR}/.Dockerfile";
