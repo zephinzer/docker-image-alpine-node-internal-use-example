@@ -18,14 +18,16 @@ jobs:
         - git remote add origin https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node-internal-use-example.git
         - git config remote.origin.fetch "+refs/heads/*:refs/remotes/origin/*"
         - git fetch origin
-        - git checkout master
         - git checkout public
         - CURRENT_HASH=$(git log -n 1 --pretty=format:"%H")
         # 2
         - git remote add source https://zephinzer:${GITHUB_TOKEN}@github.com/zephinzer/docker-image-alpine-node.git
-        - git fetch
+        - git fetch source
         # 3
-        - git pull source master
+        - git reset --hard FETCH_HEAD
+        - git clean -df
+        - git update-index --assume-unchanged README.md
+        - git update-index --assume-unchanged .travis.yml
         - UPDATED_HASH=$(git log -n 1 --pretty=format:"%H")
         # 4
         - if [[ $UPDATED_HASH != $CURRENT_HASH ]]; then git push origin public; fi;
@@ -39,8 +41,8 @@ jobs:
         - git update-index --assume-unchanged README.md
         - git update-index --assume-unchanged .travis.yml
         # 8
-        - git merge hybrid_source_${CURRENT_DATE_STRING} --no-commit
+        - git merge hybrid_source_${CURRENT_DATE_STRING}
         - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')" --allow-empty
         # 9
-        - if [[ $UPDATED_HASH != $CURRENT_HASH ]]; then git push origin master; fi;
+        - git push origin master;
         - git branch -D hybrid_source_${CURRENT_DATE_STRING}
