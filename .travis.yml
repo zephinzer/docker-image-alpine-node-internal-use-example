@@ -49,7 +49,7 @@ jobs:
         - mv README.tmp.md README.md
         - mv .travis.tmp.yml .travis.yml
         - git add -u README.tmp.md .travis.tmp.yml
-        - git add README.md .travis.tmp.yml
+        - git add README.md .travis.yml
         - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')" --allow-empty
         # 9
         - if [[ $UPDATED_HASH != $CURRENT_HASH ]]; then git push origin master; fi;
