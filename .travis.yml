@@ -34,7 +34,7 @@ jobs:
         - CURRENT_DATE_STRING=$(date +'%Y%m%d%H%M%S')
         # 5
         - git checkout -b hybrid_source_${CURRENT_DATE_STRING}
-        - git rm README.md
+        - git rm README.md .travis.yml
         - git commit -m "Ignoring current readme..."
         # 6
         - git checkout master
