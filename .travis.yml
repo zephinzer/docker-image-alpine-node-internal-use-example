@@ -34,11 +34,22 @@ jobs:
         - CURRENT_DATE_STRING=$(date +'%Y%m%d%H%M%S')
         # 5
         - git checkout -b hybrid_source_${CURRENT_DATE_STRING}
+        - git rm README.md
+        - git commit -m "Ignoring current readme..."
         # 6
         - git checkout master
+        - mv README.md README.tmp.md
+        - mv .travis.yml .travis.tmp.yml
+        - git add -u README.md .travis.yml
+        - git add README.tmp.md .travis.tmp.yml
+        - git commit -m "Saving current readme..."
         # 7
         # 8
-        - git update-index --assume-unchanged README.md .travis.yml && git merge hybrid_source_${CURRENT_DATE_STRING}
+        - git merge hybrid_source_${CURRENT_DATE_STRING} --no-commit
+        - mv README.tmp.md README.md
+        - mv .travis.tmp.yml .travis.yml
+        - git add -u README.tmp.md .travis.tmp.yml
+        - git add README.md .travis.tmp.yml
         - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')" --allow-empty
         # 9
         - git push origin master;
