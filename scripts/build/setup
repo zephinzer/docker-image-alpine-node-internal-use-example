@@ -50,21 +50,21 @@ sed \
 NODE_VERSION_KEY="__NODE_VERSION__";
 
 ## argon (4.x)
-ARGON_DOCKERFILE="${PROJ_DIR}/argon.Dockerfile";
+ARGON_DOCKERFILE="${PROJ_DIR}/ARGON.Dockerfile";
 ARGON_VERSION="$(${UTILS_DIR}/argon_version)";
 ARGON_VERSION_SED="s|${NODE_VERSION_KEY}|${ARGON_VERSION}|g";
 printf "ARGON_VERSION:          ${ARGON_VERSION}\n";
 sed -e "s|--without-intl| |g" -e "${ARGON_VERSION_SED}" "${BASE_DOCKERFILE}" > "${ARGON_DOCKERFILE}";
 
 ## boron (6.x)
-BORON_DOCKERFILE="${PROJ_DIR}/boron.Dockerfile";
+BORON_DOCKERFILE="${PROJ_DIR}/BORON.Dockerfile";
 BORON_VERSION="$(${UTILS_DIR}/boron_version)";
 BORON_VERSION_SED="s|${NODE_VERSION_KEY}|${BORON_VERSION}|g";
 printf "BORON_VERSION:          ${BORON_VERSION}\n";
 sed -e "${BORON_VERSION_SED}" "${BASE_DOCKERFILE}" > "${BORON_DOCKERFILE}";
 
 ## carbon (8.x)
-CARBON_DOCKERFILE="${PROJ_DIR}/carbon.Dockerfile";
+CARBON_DOCKERFILE="${PROJ_DIR}/CARBON.Dockerfile";
 CARBON_VERSION=$(${UTILS_DIR}/carbon_version);
 CARBON_VERSION_SED="s|${NODE_VERSION_KEY}|${CARBON_VERSION}|g";
 printf "CARBON_VERSION:         ${CARBON_VERSION}\n";
