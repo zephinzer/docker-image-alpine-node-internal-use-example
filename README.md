@@ -25,9 +25,9 @@ We have here a repository that is a mirror from the main repository that builds 
 3. Pull from the source repository into the `public` branch
 4. Push to the `public` branch in internal repository if the code was updated
 5. Checkout a new `hybrid` branch in internal repository from the `public` branch
-6. Remove indexing of files changed internally (in this example, we wish to override the `.travis.yml` and `README.md`)
-7. Create an integration commit message so that anyone pulling from `master` branch in internal repository will understand changes have been made because they can't push
-8. Switch to the `master` branch in internal repository
+6. Switch to the `master` branch in internal repository
+7. Remove indexing of files changed internally (in this example, we wish to override the `.travis.yml` and `README.md`)
+8. Merge the `hybrid` branch into `master` and create an integration commit so that everyone will know it was updated
 9. Check if there's a difference in commit hash between the `public` branch in internal repository and the `master` branch in the open source repository, if there is, merge changes with the `hybrid` branch and push to `master` in the internal repository.
 
 A Travis CI version of the methodology has been implemented for this example repository and can be found in the `.travis.yml` file.

@@ -34,16 +34,13 @@ jobs:
         # 5
         - git checkout -b hybrid_source_${CURRENT_DATE_STRING}
         # 6
-        - git update-index --skip-worktree .travis.yml
-        - git update-index --skip-worktree README.md
-        # 7
-        - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')" --allow-empty
-        # 8
         - git checkout master
-        - git update-index --skip-worktree .travis.yml
-        - git update-index --skip-worktree README.md
-        - git merge hybrid_source_${CURRENT_DATE_STRING} --no-commit && git checkout --ours .travis.yml && git checkout --ours README.md
-        - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')"
+        # 7
+        - git update-index --assume-unchanged README.md
+        - git update-index --assume-unchanged .travis.yml
+        # 8
+        - git merge hybrid_source_${CURRENT_DATE_STRING} --no-commit
+        - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')" --allow-empty
         # 9
         - if [[ $UPDATED_HASH != $CURRENT_HASH ]]; then git push origin master; fi;
         - git branch -D hybrid_source_${CURRENT_DATE_STRING}
