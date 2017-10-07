@@ -26,8 +26,7 @@ jobs:
         # 3
         - git reset --hard FETCH_HEAD
         - git clean -df
-        - git update-index --assume-unchanged README.md
-        - git update-index --assume-unchanged .travis.yml
+        - git update-index --assume-unchanged README.md .travis.yml
         - UPDATED_HASH=$(git log -n 1 --pretty=format:"%H")
         # 4
         - if [[ $UPDATED_HASH != $CURRENT_HASH ]]; then git push origin public; fi;
@@ -38,10 +37,8 @@ jobs:
         # 6
         - git checkout master
         # 7
-        - git update-index --assume-unchanged README.md
-        - git update-index --assume-unchanged .travis.yml
         # 8
-        - git merge hybrid_source_${CURRENT_DATE_STRING}
+        - git update-index --assume-unchanged README.md .travis.yml && git merge hybrid_source_${CURRENT_DATE_STRING}
         - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')" --allow-empty
         # 9
         - git push origin master;
