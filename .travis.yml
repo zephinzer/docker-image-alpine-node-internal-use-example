@@ -52,5 +52,6 @@ jobs:
         - git add README.md .travis.yml
         - git commit -m "Integrated branch public:${UPDATED_HASH} at $(date +'%Y-%m-%d %H:%M:%S')" --allow-empty
         # 9
-        - if [[ $UPDATED_HASH != $CURRENT_HASH ]]; then git push origin master; fi;
+        - COMMIT_MESSAGE="$(git log -1 --pretty=%B)";
+        - if [[ $UPDATED_HASH != $CURRENT_HASH ]] || [[ ${COMMIT_MESSAGE} == *"[force build]"* ]]; then git push origin master; fi;
         - git branch -D hybrid_source_${CURRENT_DATE_STRING}
