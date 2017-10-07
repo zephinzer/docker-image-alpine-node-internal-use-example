@@ -27,17 +27,17 @@ jobs:
   include: # <codename>-<node_version>, <build_version>-<codename>, latest-<codename>
     - stage: build
       env:
-        - TAG_NAME=ARGON
+        - TAG_NAME=argon
       script:
         - ./scripts/ci/build ${TAG_NAME}
     - stage: build
       env:
-        - TAG_NAME=BORON
+        - TAG_NAME=boron
       script:
         - ./scripts/ci/build ${TAG_NAME}
     - stage: build
       env:
-        - TAG_NAME=CARBON
+        - TAG_NAME=carbon
       script:
         - ./scripts/ci/build ${TAG_NAME}
     ## react-development
