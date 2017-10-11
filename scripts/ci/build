@@ -41,8 +41,6 @@ if [[ $? != "0" ]]; then
   exit 1;
 fi;
 
-EXISTENCE_TAG="node-${NODE_VERSION}_yarn-${YARN_VERSION}";
-EXISTENCE_CHECK=$(curl -sSlLf ${DOCKER_REGISTRY_URL}/v1/repositories/${REPOSITORY_NAME}/tags/${EXISTENCE_TAG});
 COMMIT_MESSAGE=$(git log -n 1 --pretty=format:"%B");
 if [[ ${IS_PULL_REQUEST} = "" ]]; then
   if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
@@ -51,12 +49,14 @@ if [[ ${IS_PULL_REQUEST} = "" ]]; then
     IS_PULL_REQUEST='true';
   fi;
 fi;
+EXISTENCE_TAG="node-${NODE_VERSION}_yarn-${YARN_VERSION}";
+EXISTENCE_CHECK=$(curl -sSlLf ${DOCKER_REGISTRY_URL}/v1/repositories/${REPOSITORY_NAME}/tags/${EXISTENCE_TAG});
 if [[ $? != "0" ]] || [[ $COMMIT_MESSAGE == *"[force build]"* ]]; then
   printf "[BUILDING] TAG:${EXISTENCE_TAG} was NOT found. Building...\n";
   docker build -t next -f ${TAG_NAME}.Dockerfile .;
   if [[ ${IS_PULL_REQUEST} = "false" ]]; then
     printf "[PUBLISHING] Pushing latest ${TAG_NAME} to Docker Hub...\n";
-    docker ${DOCKER_REGISTRY_URL} login -u  $DHUSER -p $DHPASS;
+    docker login ${DOCKER_REGISTRY_URL} -u  $DHUSER -p $DHPASS;
     docker tag next  ${REPOSITORY_NAME}:${NODE_VERSION};
     docker push      ${REPOSITORY_NAME}:${NODE_VERSION};
     docker tag next  ${REPOSITORY_NAME}:${EXISTENCE_TAG};
