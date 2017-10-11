@@ -1,37 +1,71 @@
 #!/bin/bash
-TAG_NAME=$1;
+# script-wide constants
 CURR_DIR=$(dirname $0);
 PROJ_DIR=${CURR_DIR}/../..;
 SETUP_DIR=${PROJ_DIR}/.setup;
+UTILS_DIR=${CURR_DIR}/../utils;
+
+# arguments processing
+TAG_NAME=$1;
 
 ${CURR_DIR}/../build/setup;
-NODE_VERSION=$(cat ${SETUP_DIR}/${TAG_NAME}.Version);
+__setup_directory_exists=$(stat ${SETUP_DIR} &>/dev/null);
 if [[ $? != "0" ]]; then
-  printf "[ERROR] ${SETUP_DIR}/yarn.Version could not be found.\n";
+  printf "\n\033[31m[ERR] The \033[0m\n\n";
   exit 1;
 fi;
-YARN_VERSION="$(cat ${SETUP_DIR}/yarn.Version)";
+
+NODE_VERSION=$(cat ${SETUP_DIR}/${TAG_NAME}_VERSION);
 if [[ $? != "0" ]]; then
-  printf "[ERROR] ${SETUP_DIR}/yarn.Version could not be found.\n";
+  printf "[ERROR] ${SETUP_DIR}/${TAG_NAME}_VERSION could not be found.\n";
   exit 1;
+fi;
+printf "NODE_VERSION:           ${NODE_VERSION}\n";
+
+YARN_VERSION="$(cat ${SETUP_DIR}/YARN_VERSION)";
+if [[ $? != "0" ]]; then
+  printf "[ERROR] ${SETUP_DIR}/YARN_VERSION could not be found.\n";
+  exit 1;
+fi;
+printf "YARN_VERSION:           ${YARN_VERSION}\n";
+
+REPOSITORY_NAME="$(cat ${SETUP_DIR}/REPOSITORY_NAME)";
+if [[ $? != "0" ]]; then
+  printf "[ERROR] ${SETUP_DIR}/REPOSITORY_NAME could not be found.\n";
+  exit 1;
+fi;
+
+DOCKER_REGISTRY_URL="$(cat ${SETUP_DIR}/DOCKER_REGISTRY_URL)";
+if [[ $? != "0" ]]; then
+  printf "[ERROR] ${SETUP_DIR}/DOCKER_REGISTRY_URL could not be found.\n";
+  exit 1;
+fi;
+
+COMMIT_MESSAGE=$(git log -n 1 --pretty=format:"%B");
+if [[ ${IS_PULL_REQUEST} = "" ]]; then
+  if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
+    IS_PULL_REQUEST='false';
+  else
+    IS_PULL_REQUEST='true';
+  fi;
 fi;
 EXISTENCE_TAG="node-${NODE_VERSION}_yarn-${YARN_VERSION}";
-EXISTENCE_CHECK=$(curl --silent -f -lSL https://index.docker.io/v1/repositories/zephinzer/alpine-node/tags/${EXISTENCE_TAG});
-if [[ $? != "0" ]] || [[ $TRAVIS_COMMIT_MESSAGE == *"[force build]"* ]]; then
+EXISTENCE_CHECK=$(curl -sSlLf ${DOCKER_REGISTRY_URL}/v1/repositories/${REPOSITORY_NAME}/tags/${EXISTENCE_TAG});
+if [[ $? != "0" ]] || [[ $COMMIT_MESSAGE == *"[force build]"* ]]; then
   printf "[BUILDING] TAG:${EXISTENCE_TAG} was NOT found. Building...\n";
   docker build -t next -f ${TAG_NAME}.Dockerfile .;
-  if [[ $TRAVIS_PULL_REQUEST = "false" ]]; then
-    printf "[PUBLISHING] TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST, pushing latest ${TAG_NAME} to Docker Hub...\n";
-    docker login -u $DHUSER -p $DHPASS;
-    docker tag next  ${DOCKER_REPO}:${NODE_VERSION};
-    docker push      ${DOCKER_REPO}:${NODE_VERSION};
-    docker tag next  ${DOCKER_REPO}:${EXISTENCE_TAG};
-    docker push      ${DOCKER_REPO}:${EXISTENCE_TAG};
-    docker tag next  ${DOCKER_REPO}:latest-${TAG_NAME};
-    docker push      ${DOCKER_REPO}:latest-${TAG_NAME};
+  if [[ ${IS_PULL_REQUEST} = "false" ]]; then
+    printf "[PUBLISHING] Pushing latest ${TAG_NAME} to Docker Hub...\n";
+    docker login ${DOCKER_REGISTRY_URL} -u  $DHUSER -p $DHPASS;
+    docker tag next  ${REPOSITORY_NAME}:${NODE_VERSION};
+    docker push      ${REPOSITORY_NAME}:${NODE_VERSION};
+    docker tag next  ${REPOSITORY_NAME}:${EXISTENCE_TAG};
+    docker push      ${REPOSITORY_NAME}:${EXISTENCE_TAG};
+    docker tag next  ${REPOSITORY_NAME}:latest-${TAG_NAME};
+    docker push      ${REPOSITORY_NAME}:latest-${TAG_NAME};
     docker logout;
   else
-    printf "[SKIPPED PUBLISHING] TRAVIS_PULL_REQUEST = $TRAVIS_PULL_REQUEST, no further action required.\n";
+    printf "[SKIPPED PUBLISHING] No further action required.\n";
   fi;
 else
   printf "[SKIPPED] TAG:${EXISTENCE_TAG} was found. Skipping build...\n";

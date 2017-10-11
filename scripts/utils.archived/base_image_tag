@@ -1,0 +1,19 @@
+#!/bin/bash
+## template
+CURR_DIR=$(dirname $0);
+PROJ_DIR=${CURR_DIR}/../..;
+SETUP_DIR=${PROJ_DIR}/.setup;
+CONF_DIR=${PROJ_DIR}/conf.d;
+
+## constants
+CONF_FILE_PATH="${CONF_DIR}/BASE_IMAGE_TAG";
+OUTPUT_FILE="${SETUP_DIR}/tag.Version";
+
+## processing
+BASE_IMAGE_TAG='3.4';
+__exists=$(stat ${CONF_FILE_PATH} &>/dev/null);
+if [[ $? = "0" ]]; then BASE_IMAGE_TAG=$(cat ${CONF_FILE_PATH}); fi;
+
+## output
+printf "$BASE_IMAGE_TAG" > "${OUTPUT_FILE}";
+printf "$BASE_IMAGE_TAG";

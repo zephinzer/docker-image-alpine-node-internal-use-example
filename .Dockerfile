@@ -1,4 +1,4 @@
-FROM __BASE_IMAGE_SOURCE__:__BASE_IMAGE_TAG__
+FROM __BASE_IMAGE_NAME__:__BASE_IMAGE_TAG__
 LABEL maintainer="dev@joeir.net" \
       version="1.0.0" \
       description="A minimal Node + Yarn base image to work with."
@@ -13,7 +13,7 @@ ENV NODE_GPG_URL=https://nodejs.org/dist/${NODE_VERSION}/SHASUMS256.txt.asc
 ENV NODE_INSTALL_PATH=${INSTALL_PATH}/node.tar.xz
 ENV NODE_INSTALL_GPG_PATH=${NODE_INSTALL_PATH}.asc
 ENV NODE_INSTALL_DIR=${INSTALL_PATH}/node-${NODE_VERSION}
-ENV NODE_BUILD_FLAGS="--without-intl --fully-static"
+ENV NODE_BUILD_FLAGS="--without-intl"
 ENV PATHS_TO_REMOVE="\
   ${INSTALL_PATH}/* \
   /root/.gnupg/* \
