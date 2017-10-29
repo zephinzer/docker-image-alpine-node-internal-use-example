@@ -7,6 +7,9 @@ UTILS_DIR=${CURR_DIR}/../utils;
 
 # arguments processing
 TAG_NAME=$1;
+TAG_NAME_LC=$(printf ${TAG_NAME} | tr '[:upper:]' '[:lower:]');
+printf "TAG_NAME                  : ${TAG_NAME}\n";
+printf "TAG_NAME_LC               : ${TAG_NAME_LC}\n";
 
 ${CURR_DIR}/../build/setup;
 __setup_directory_exists=$(stat ${SETUP_DIR} &>/dev/null);
@@ -66,8 +69,8 @@ if [[ $? != "0" ]] || [[ $COMMIT_MESSAGE == *"[force build]"* ]]; then
     docker push      ${REPOSITORY_NAME}:${NODE_VERSION};
     docker tag next  ${REPOSITORY_NAME}:${EXISTENCE_TAG};
     docker push      ${REPOSITORY_NAME}:${EXISTENCE_TAG};
-    docker tag next  ${REPOSITORY_NAME}:latest-${TAG_NAME};
-    docker push      ${REPOSITORY_NAME}:latest-${TAG_NAME};
+    docker tag next  ${REPOSITORY_NAME}:latest-${TAG_NAME_LC};
+    docker push      ${REPOSITORY_NAME}:latest-${TAG_NAME_LC};
     docker logout;
   else
     printf "[SKIPPED PUBLISHING] No further action required.\n";
