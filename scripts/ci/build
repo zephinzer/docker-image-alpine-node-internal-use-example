@@ -20,14 +20,14 @@ if [[ $? != "0" ]]; then
   printf "[ERROR] ${SETUP_DIR}/${TAG_NAME}_VERSION could not be found.\n";
   exit 1;
 fi;
-printf "NODE_VERSION:           ${NODE_VERSION}\n";
+printf "NODE_VERSION              : ${NODE_VERSION}\n";
 
 YARN_VERSION="$(cat ${SETUP_DIR}/YARN_VERSION)";
 if [[ $? != "0" ]]; then
   printf "[ERROR] ${SETUP_DIR}/YARN_VERSION could not be found.\n";
   exit 1;
 fi;
-printf "YARN_VERSION:           ${YARN_VERSION}\n";
+printf "YARN_VERSION              : ${YARN_VERSION}\n";
 
 REPOSITORY_NAME="$(cat ${SETUP_DIR}/REPOSITORY_NAME)";
 if [[ $? != "0" ]]; then
@@ -40,6 +40,11 @@ if [[ $? != "0" ]]; then
   printf "[ERROR] ${SETUP_DIR}/DOCKER_REGISTRY_URL could not be found.\n";
   exit 1;
 fi;
+if [[ "${DOCKER_REGISTRY_URL}" = "" ]]; then
+  DOCKER_REGISTRY_PULL_URL='https://index.docker.io';
+else
+  DOCKER_REGISTRY_PULL_URL="${DOCKER_REGISTRY_URL}";
+fi;
 
 COMMIT_MESSAGE=$(git log -n 1 --pretty=format:"%B");
 if [[ ${IS_PULL_REQUEST} = "" ]]; then
@@ -50,13 +55,13 @@ if [[ ${IS_PULL_REQUEST} = "" ]]; then
   fi;
 fi;
 EXISTENCE_TAG="node-${NODE_VERSION}_yarn-${YARN_VERSION}";
-EXISTENCE_CHECK=$(curl -sSlLf ${DOCKER_REGISTRY_URL}/v1/repositories/${REPOSITORY_NAME}/tags/${EXISTENCE_TAG});
+EXISTENCE_CHECK=$(curl -sSlLf ${DOCKER_REGISTRY_PULL_URL}/v1/repositories/${REPOSITORY_NAME}/tags/${EXISTENCE_TAG});
 if [[ $? != "0" ]] || [[ $COMMIT_MESSAGE == *"[force build]"* ]]; then
   printf "[BUILDING] TAG:${EXISTENCE_TAG} was NOT found. Building...\n";
   docker build -t next -f ${TAG_NAME}.Dockerfile .;
   if [[ ${IS_PULL_REQUEST} = "false" ]]; then
     printf "[PUBLISHING] Pushing latest ${TAG_NAME} to Docker Hub...\n";
-    docker login ${DOCKER_REGISTRY_URL} -u  $DHUSER -p $DHPASS;
+    docker login ${DOCKER_REGISTRY_URL} -u $DHUSER -p $DHPASS;
     docker tag next  ${REPOSITORY_NAME}:${NODE_VERSION};
     docker push      ${REPOSITORY_NAME}:${NODE_VERSION};
     docker tag next  ${REPOSITORY_NAME}:${EXISTENCE_TAG};
